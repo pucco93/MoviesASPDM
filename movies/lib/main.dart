@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'WelcomeSection/WelcomePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         break;
       case 'dark':
         themeMode = ThemeMode.dark;
-        break;      
+        break;
       default:
         themeMode = ThemeMode.system;
         break;
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Movies',
       theme: ThemeData(
         brightness: Brightness.light,
+        fontFamily: 'Montserrat'
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
