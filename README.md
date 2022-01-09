@@ -1,11 +1,11 @@
-# Introduction
+# Introduction
 
 ## Info progetto
 Nome: **Alessandro Pucci**,  
 Matricola: **317172**,  
 Titolo: **Movies**.  
 
-## Spiegazione
+# Spiegazione
 L'applicazione che ho sviluppato è una semplice app per mostrare informazioni riguardanti film, serie tv e persone.
 L'idea è di poter avere una piattaforma dove poter vedere informazioni riguardanti tante opere, e poter anche capire quale sia il servizio di streaming da cui poterli vedere, senza dover fare ulteriori ricerche su internet.  
   
@@ -22,8 +22,10 @@ Se l'utente al momento non ha la possibilità di vedere il film scelto può deci
 La UI presenta elementi di facile utilizzo per device mobile, come liste orizzontali e pagine a scorrimento verticale, in particolare per la UX si è pensato di creare (oltre il navbar in alto con il pulsante del menù) una bottomNavigationBar perchè più facilmente raggiungibile negli smartphone con il pollice, questa presenta i pulsanti per raggiungere le principali pagine: home, preferiti, ricerca e profilo.
 
 I campi per inserire gli input sono mirati ad aprire la keyboard dello smartphone con il tipo che l'app si aspetta (nel caso della mail il textfield apre la keyboard con ni suggerimenti le mail già inserite in altri field della stessa tipologia e con i pulsanti della tastiera per velocizzare l'inserimento di un mail).
+  
+  Inserire screenshot
 
-## Techs
+# Techs
 Le tecnologie utilizzate: 
 - per le APIs ho utilizzato il servizio di TMDB.com, un portale dove si possono trovare APIs per una vasta collezione di dati riguardanti film, serie tv e personaggi dello spettacolo.
 Per poterle utilizzare occorre creare un account sul sito ed in seguito fare richieste autenticate con api_key o bearer token, dipendentemente da quale versione di API si intende usare.
