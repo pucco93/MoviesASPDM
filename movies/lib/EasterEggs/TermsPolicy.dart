@@ -33,7 +33,9 @@ class _TermsPolicyState extends State<TermsPolicy> {
           backgroundColor: ColorSelect.customMagenta,
           clipBehavior: Clip.hardEdge,
           child:
-              const Icon(Icons.arrow_back_ios, color: Colors.white),
+            const Align(child: Icon(Icons.arrow_back_ios, color: Colors.white),
+            alignment: Alignment.center,)
+              
         ),
         body: Container(
             color: ColorSelect.customBlue,
