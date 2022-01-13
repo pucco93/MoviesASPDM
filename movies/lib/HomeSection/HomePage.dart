@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:movies/Colors/Colors.dart';
 import 'package:movies/DetailsSection/DetailsMoviePage.dart';
 import 'package:movies/DetailsSection/DetailsPersonPage.dart';
 import 'package:movies/DetailsSection/DetailsSeriePage.dart';
+import 'package:movies/data_manager/DataManager.dart';
+import 'package:movies/models/Movie.dart';
+import 'package:movies/models/Person.dart';
+import 'package:movies/models/TVSerie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import 'package:movies/Constants/Constants.dart';
@@ -12,12 +17,9 @@ import 'package:movies/SearchSection/SearchPage.dart';
 import 'package:movies/ProfileSection/ProfilePage.dart';
 import 'package:movies/FavouritesSection/FavouritesPage.dart';
 import 'package:movies/HomeSection/HomeLists/TrendingList.dart';
-import 'package:movies/HomeSection/HomeLists/UpcomingMovies.dart';
-import 'package:movies/HomeSection/HomeLists/BestMovies.dart';
-import 'package:movies/HomeSection/HomeLists/BestSeries.dart';
-import 'package:movies/HomeSection/HomeLists/PopularPeople.dart';
-import 'package:movies/HomeSection/HomeLists/PopularMovies.dart';
-import 'package:movies/HomeSection/HomeLists/PopularSeries.dart';
+import 'package:movies/HomeSection/HomeLists/MoviesList.dart';
+import 'package:movies/HomeSection/HomeLists/SeriesList.dart';
+import 'package:movies/HomeSection/HomeLists/PeopleList.dart';
 import 'package:movies/HomeSection/LatestItems/LatestMovies.dart';
 import 'package:movies/HomeSection/LatestItems/LatestSeries.dart';
 
@@ -62,19 +64,21 @@ class _HomePageState extends State<HomePage> {
       HomePageBody(),
       const SearchPage(),
       const ProfilePage(),
-      const FavouritesPage()
+      const FavouritesPage(),
     ];
 
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(10),
+            bottom: Radius.circular(20),
           ),
         ),
+        backgroundColor: ColorSelect.customBlue,
         leading: IconButton(
             icon: const Icon(
               Icons.account_circle_outlined,
@@ -107,81 +111,230 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class HomePageBody extends StatelessWidget {
-  HomePageBody({Key? key}) : super(key: key);
+class HomePageBody extends StatefulWidget {
+  const HomePageBody({Key? key}) : super(key: key);
 
-  final tmdb = TMDB(
-    ApiKeys(v3Token, bearerV4Token),
-  );
+  @override
+  State<HomePageBody> createState() => _HomePageBodyState();
+}
 
-  Future<Object> getTrendingMovies() async {
-    Map result = await tmdb.v3.trending
-        .getTrending(mediaType: MediaType.all, timeWindow: TimeWindow.week);
-    return result;
+class _HomePageBodyState extends State<HomePageBody> {
+  DataManager dataManager = DataManager();
+  bool isTrendingLoading = true;
+  bool isBestMoviesLoading = true;
+  bool isBestSeriesLoading = true;
+  bool isUpcomingMoviesLoading = true;
+  bool isPopularMoviesLoading = true;
+  bool isPopularSeriesLoading = true;
+  bool isPeopleLoading = true;
+  bool isLatestSerieLoading = true;
+  bool isLatestMovieLoading = true;
+  List<dynamic> trendingItems = [];
+  List<Movie> bestMovies = [];
+  List<TVSerie> bestSeries = [];
+  List<Movie> upcomingMovies = [];
+  List<Movie> popularMovies = [];
+  List<TVSerie> popularSeries = [];
+  List<Person> people = [];
+  TVSerie latestSerie = initialSerie;
+  Movie latestMovie = initialMovie;
+
+  updateTrendingLoader() {
+    if (mounted) {
+      setState(() {
+        isTrendingLoading = !isTrendingLoading;
+      });
+    }
   }
 
-  Future<Object> getBestMovies() async {
-    Map result = await tmdb.v3.movies.getTopRated(language: "it-IT");
-    return result;
+  updateUpcomingLoader() {
+    if (mounted) {
+      setState(() {
+        isUpcomingMoviesLoading = !isUpcomingMoviesLoading;
+      });
+    }
   }
 
-  Future<Object> getBestSeries() async {
-    Map result = await tmdb.v3.tv.getTopRated(language: "it-IT");
-    return result;
+  updateLatestMovieLoader() {
+    if (mounted) {
+      setState(() {
+        isLatestMovieLoading = !isLatestMovieLoading;
+      });
+    }
   }
 
-  Future<Object> getUpcomingMovies() async {
-    Map result =
-        await tmdb.v3.movies.getUpcoming(language: "it-IT", region: "IT");
-    return result;
+  updateLatestSerieLoader() {
+    if (mounted) {
+      setState(() {
+        isLatestSerieLoading = !isLatestSerieLoading;
+      });
+    }
   }
 
-  Future<Object> getLatestMovie() async {
-    Map result = await tmdb.v3.movies.getLatest(language: "it-IT");
-    return result;
+  updatePopularMoviesLoader() {
+    if (mounted) {
+      setState(() {
+        isPopularMoviesLoading = !isPopularMoviesLoading;
+      });
+    }
   }
 
-  Future<Object> getLatestSerie() async {
-    Map result = await tmdb.v3.tv.getLatest(language: "it-IT");
-    return result;
+  updatePopularSeriesLoader() {
+    if (mounted) {
+      setState(() {
+        isPopularSeriesLoading = !isPopularSeriesLoading;
+      });
+    }
   }
 
-  Future<Object> getPopularMovies() async {
-    Map result =
-        await tmdb.v3.movies.getPouplar(language: "it-IT", region: "IT");
-    return result;
+  updateBestMoviesLoader() {
+    if (mounted) {
+      setState(() {
+        isBestMoviesLoading = !isBestMoviesLoading;
+      });
+    }
   }
 
-  Future<Object> getPopularTVSeries() async {
-    Map result = await tmdb.v3.tv.getPouplar(language: "it-IT");
-    return result;
+  updateBestSeriesLoader() {
+    if (mounted) {
+      setState(() {
+        isBestSeriesLoading = !isBestSeriesLoading;
+      });
+    }
   }
 
-  Future<Object> getPopularPeople() async {
-    Map result = await tmdb.v3.people.getPopular(language: "it-IT");
-    return result;
+  updatePeopleLoader() {
+    if (mounted) {
+      setState(() {
+        isPeopleLoading = !isPeopleLoading;
+      });
+    }
+  }
+
+  _getTrending() async {
+    List<dynamic> newTrendingItems = await dataManager.getTrending();
+    if (mounted) {
+      setState(() {
+        trendingItems = newTrendingItems;
+      });
+    }
+    updateTrendingLoader();
+  }
+
+  _getUpcomingMovies() async {
+    List<Movie> newUpcomingMovies = await dataManager.getUpcomingMovies();
+    if (mounted) {
+      setState(() {
+        upcomingMovies = newUpcomingMovies;
+      });
+    }
+    updateUpcomingLoader();
+  }
+
+  _getLatestMovie() async {
+    Movie newLatestMovie = await dataManager.getLatestMovie();
+    if (mounted) {
+      setState(() {
+        latestMovie = newLatestMovie;
+      });
+    }
+    updateLatestMovieLoader();
+  }
+
+  _getLatestSerie() async {
+    TVSerie newLatestSerie = await dataManager.getLatestSerie();
+    if (mounted) {
+      setState(() {
+        latestSerie = newLatestSerie;
+      });
+    }
+    updateLatestSerieLoader();
+  }
+
+  _getPopularMovies() async {
+    List<Movie> newPopularMovies = await dataManager.getPopularMovies();
+    if (mounted) {
+      setState(() {
+        popularMovies = newPopularMovies;
+      });
+    }
+    updatePopularMoviesLoader();
+  }
+
+  _getPopularSeries() async {
+    List<TVSerie> newPopularSeries = await dataManager.getPopularTVSeries();
+    if (mounted) {
+      setState(() {
+        popularSeries = newPopularSeries;
+      });
+    }
+    updatePopularSeriesLoader();
+  }
+
+  _getBestMovies() async {
+    List<Movie> newBestMovies = await dataManager.getBestMovies();
+    if (mounted) {
+      setState(() {
+        bestMovies = newBestMovies;
+      });
+    }
+    updateBestMoviesLoader();
+  }
+
+  _getBestSeries() async {
+    List<TVSerie> newBestSeries = await dataManager.getBestSeries();
+    if (mounted) {
+      setState(() {
+        bestSeries = newBestSeries;
+      });
+    }
+    updateBestSeriesLoader();
+  }
+
+  _getPeople() async {
+    List<Person> newPeople = await dataManager.getPopularPeople();
+    if (mounted) {
+      setState(() {
+        people = newPeople;
+      });
+    }
+    updatePeopleLoader();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getTrending();
+    _getUpcomingMovies();
+    _getBestMovies();
+    _getBestSeries();
+    _getLatestMovie();
+    _getLatestSerie();
+    _getPopularMovies();
+    _getPopularSeries();
+    _getPeople();
   }
 
   @override
   Widget build(BuildContext context) {
-
-  openItem(dynamic item) {
-    if (item.mediaType == "movie") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailsMoviePage(item: item)));
-    } else if (item.mediaType == "tv") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailsSeriePage(item: item)));
-    } else {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailsPersonPage(item: item)));}
-  }
+    openItem(dynamic item) {
+      if (item.mediaType == "movie") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsMoviePage(item: item)));
+      } else if (item.mediaType == "tv") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsSeriePage(item: item)));
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsPersonPage(item: item)));
+      }
+    }
 
     return SingleChildScrollView(
         child: Column(
@@ -198,102 +351,119 @@ class HomePageBody extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
             child: HorizontalTrendingMoviesList(
-                getTrendingMovies: getTrendingMovies, openItem: openItem)),
-        const Padding(padding: EdgeInsets.only(top: 40)),
+              items: trendingItems,
+              openItem: openItem,
+              isLoading: isTrendingLoading,
+            )),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Latest movie", style: TextStyle(fontSize: 20)))),
+        const Padding(padding: EdgeInsets.only(top: 20)),
+        PreviewLatestMovie(movie: latestMovie, isLoading: isLatestMovieLoading),
         const Padding(padding: EdgeInsets.only(top: 30)),
-        PreviewLatestMovie(getLatestMovie: getLatestMovie),
-        const Padding(padding: EdgeInsets.only(top: 40)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child:
                     Text("Upcoming movies", style: TextStyle(fontSize: 20)))),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         Container(
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalUpcomingMoviesList(
-                getUpcomingMovies: getUpcomingMovies, openItem: openItem,)),
-        const Padding(padding: EdgeInsets.only(top: 40)),
+            child: MoviesList(
+                movies: upcomingMovies,
+                openItem: openItem,
+                isLoading: isUpcomingMoviesLoading)),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Best movies", style: TextStyle(fontSize: 20)))),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         Container(
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalBestMoviesList(getBestMovies: getBestMovies, openItem: openItem)),
-        const Padding(padding: EdgeInsets.only(top: 40)),
+            child: MoviesList(
+                movies: bestMovies,
+                openItem: openItem,
+                isLoading: isBestMoviesLoading)),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Best tv series", style: TextStyle(fontSize: 20)))),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         Container(
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalBestSeriesList(getBestSeries: getBestSeries, openItem: openItem)),
-        const Padding(padding: EdgeInsets.only(top: 40)),
+            child: SeriesList(
+                series: bestSeries,
+                openItem: openItem,
+                isLoading: isBestSeriesLoading)),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child:
                     Text("Latest TV serie", style: TextStyle(fontSize: 20)))),
+        const Padding(padding: EdgeInsets.only(top: 20)),
+        PreviewLatestSerie(serie: latestSerie, isLoading: isLatestSerieLoading),
         const Padding(padding: EdgeInsets.only(top: 30)),
-        PreviewLatestSerie(getLatestSerie: getLatestSerie),
-        const Padding(padding: EdgeInsets.only(top: 40)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Popular movies", style: TextStyle(fontSize: 20)))),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         Container(
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalPopularMoviesList(
-                getPopularMovies: getPopularMovies, openItem: openItem)),
-        const Padding(padding: EdgeInsets.only(top: 40)),
+            child: MoviesList(
+                movies: popularMovies,
+                openItem: openItem,
+                isLoading: isPopularMoviesLoading)),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Popular series", style: TextStyle(fontSize: 20)))),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         Container(
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalPopularSeriesList(
-                getPopularSeries: getPopularTVSeries, openItem: openItem)),
-        const Padding(padding: EdgeInsets.only(top: 40)),
+            child: SeriesList(
+                series: popularSeries,
+                openItem: openItem,
+                isLoading: isPopularSeriesLoading)),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Popular people", style: TextStyle(fontSize: 20)))),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         Container(
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalPopularPeopleList(
-                getPopularPeople: getPopularPeople, openItem: openItem)),
-        const Padding(padding: EdgeInsets.only(top: 20)),
+            child: PeopleList(
+                people: people,
+                openItem: openItem,
+                isLoading: isPeopleLoading)),
+        const Padding(padding: EdgeInsets.only(top: 80)),
       ],
     ));
   }

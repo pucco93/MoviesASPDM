@@ -5,33 +5,26 @@ import 'package:movies/Utilities/Utilities.dart';
 
 class HorizontalTrendingMoviesList extends StatelessWidget {
   const HorizontalTrendingMoviesList(
-      {Key? key, required this.getTrendingMovies, required this.openItem})
+      {Key? key,
+      required this.items,
+      required this.openItem,
+      required this.isLoading})
       : super(key: key);
 
-  final Function getTrendingMovies;
+  final List<dynamic> items;
   final Function openItem;
+  final bool isLoading;
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Object>(
-      builder: (context, movieSnap) {
-        if (movieSnap.connectionState != ConnectionState.done &&
-            movieSnap.hasData == false) {
-          return const Shimmers(); // Shimmer
-        }
-        List<dynamic> items =
-            Utilities.mapGenericItem((movieSnap.data as Map)["results"]);
-        return items.isNotEmpty
-            ? ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  dynamic item = items[index];
-                  return MovieCard(item: item, openItem: openItem);
-                },
-                scrollDirection: Axis.horizontal,
-              )
-            : const Text("no data");
-      },
-      future: getTrendingMovies(),
-    );
+    return isLoading ? const Shimmers() : items.isNotEmpty
+        ? ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              dynamic item = items[index];
+              return MovieCard(item: item, openItem: openItem);
+            },
+            scrollDirection: Axis.horizontal,
+          )
+        : const Text("no data");
   }
 }

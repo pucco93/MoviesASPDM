@@ -30,9 +30,11 @@ class MovieCard extends StatelessWidget {
                         child: Stack(
                           children: [
                             item.posterPath != ""
-                                ? Image(
-                                    image: NetworkImage(
-                                        '$basePathImages${item.posterPath}'))
+                                ? FadeInImage.assetNetwork(
+                                    image: '$basePathImages${item.posterPath}',
+                                    placeholder:
+                                        'assets/images/movie_poster_placeholder.jpeg',
+                                  )
                                 : const Image(
                                     image: AssetImage(
                                         "assets/images/movie_poster_placeholder.jpeg")),

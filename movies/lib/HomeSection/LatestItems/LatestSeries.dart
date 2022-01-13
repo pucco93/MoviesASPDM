@@ -6,10 +6,12 @@ import 'package:movies/models/TVSerie.dart';
 import 'package:movies/Constants/Constants.dart';
 
 class PreviewLatestSerie extends StatelessWidget {
-  const PreviewLatestSerie({Key? key, required this.getLatestSerie})
+  const PreviewLatestSerie({Key? key, required this.serie, required this.isLoading})
       : super(key: key);
 
-  final Function getLatestSerie;
+  final TVSerie serie;
+  final bool isLoading;
+
   @override
   Widget build(BuildContext context) {
     _openSerie(TVSerie serie) {
@@ -19,33 +21,28 @@ class PreviewLatestSerie extends StatelessWidget {
               builder: (context) => DetailsSeriePage(item: serie)));
     }
 
-    return FutureBuilder<Object>(
-      builder: (context, seriesSnap) {
-        if (seriesSnap.connectionState != ConnectionState.done &&
-            seriesSnap.hasData == false) {
-          return const Shimmers(); // Shimmer
-        }
-        TVSerie item = Utilities.mapTVSerie(seriesSnap.data);
-        return Padding(
+    return isLoading ? const ShimmerSerie() : Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: <Widget>[
                 ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: InkWell(
-                        onTap: () => _openSerie(item),
+                        onTap: () => _openSerie(serie),
                         child: Container(
                             height: 300,
                             width: 600,
                             child: Stack(
                               children: [
-                                item.posterPath != ""
-                                    ? Image(
-                                        image: NetworkImage(
-                                            '$basePathImages${item.backdropPath}'))
-                                    : const Image(
-                                        image: AssetImage(
-                                            "assets/images/placeholder_movie.png")),
+                serie.backdropPath != ""
+                    ? FadeInImage.assetNetwork(
+                        image: '$basePathImages${serie.backdropPath}',
+                        placeholder:
+                            'assets/images/placeholder_movie.png',
+                      )
+                    : const Image(
+                        image: AssetImage(
+                            "assets/images/placeholder_movie.png")),
                                 Container(
                                   height: 300,
                                   width: 600,
@@ -70,15 +67,21 @@ class PreviewLatestSerie extends StatelessWidget {
                                         alignment: Alignment.bottomLeft,
                                         child: Padding(
                                             padding: const EdgeInsets.all(5),
-                                            child: Text(item.name,
+                                            child: Text(serie.name,
                                                 style: const TextStyle(
                                                     fontSize: 16))))),
                               ],
                             )))),
               ],
             ));
-      },
-      future: getLatestSerie(),
-    );
+      }
+}
+
+class ShimmerSerie extends StatelessWidget {
+  const ShimmerSerie({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

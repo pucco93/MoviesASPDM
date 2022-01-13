@@ -1,3 +1,6 @@
+import 'package:movies/models/Movie.dart';
+import 'package:movies/models/TVSerie.dart';
+
 const String bearerV4Token =
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NWUzNjdiYmQ4NDM0Y2ExYzJhNzNkNmM0ZmMyNDAyMiIsInN1YiI6IjYxZDlkMWRhNTVjOTI2MDAxYzJiOTMxYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UQeGEMcj1gHdP9f-4Q0Mx0QMK1iJLWXqo5BlOdfLzwQ";
 
@@ -42,6 +45,12 @@ const String personKnownFor = "known_for";
 const String personDepartment = "known_for_department";
 const String personPopularity = "popularity";
 const String personProfilePath = "profile_path";
+
+// Initial state Movie
+Movie initialMovie = Movie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
+
+// Initial state TVSerie
+TVSerie initialSerie = TVSerie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 
 // Genre ids in a map to be easier to access in
 Map genreIds = {
