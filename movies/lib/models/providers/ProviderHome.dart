@@ -79,57 +79,66 @@ class ProviderHome extends ChangeNotifier {
   }
 
   updateBestSeriesLoader(bool newValue) {
-    _isBestSeriesLoading = !_isBestSeriesLoading;
+    _isBestSeriesLoading = newValue;
     notifyListeners();
   }
 
   updatePeopleLoader(bool newValue) {
-    _isPeopleLoading = !isPeopleLoading;
+    _isPeopleLoading = newValue;
     notifyListeners();
   }
 
   updateTrendingItems(List<dynamic> items) {
     _trendingItems = items;
     updateTrendingLoader(false);
+    notifyListeners();
   }
 
   updateUpcomingMovies(List<Movie> items) {
     _upcomingMovies = items;
     updateUpcomingLoader(false);
+    notifyListeners();
   }
 
   updateLatestMovie(Movie item) {
     _latestMovie = item;
     updateLatestMovieLoader(false);
+    notifyListeners();
   }
 
   updateLatestSerie(TVSerie item) {
     _latestSerie = item;
     updateLatestSerieLoader(false);
+    notifyListeners();
   }
 
   updatePopularMovies(List<Movie> items) {
     _popularMovies = items;
     updatePopularMoviesLoader(false);
+    notifyListeners();
   }
 
   updatePopularSeries(List<TVSerie> items) {
     _popularSeries = items;
     updatePopularSeriesLoader(false);
+    notifyListeners();
   }
 
   updateBestMovies(List<Movie> items) {
     _bestMovies = items;
     updateBestMoviesLoader(false);
+    notifyListeners();
   }
 
   updateBestSeries(List<TVSerie> items) {
     _bestSeries = items;
     updateBestSeriesLoader(false);
+    notifyListeners();
   }
 
   updatePeople(List<Person> items) {
     _people = items;
     updatePeopleLoader(false);
+    notifyListeners();
   }
 }

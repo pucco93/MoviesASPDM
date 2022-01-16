@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:movies/Cards/MovieCard.dart';
-import 'package:movies/HomeSection/HomeLists/Shimmers.dart';
-import 'package:movies/Utilities/Utilities.dart';
-import 'package:movies/models/Providers/ProviderHome.dart';
-import 'package:movies/models/interfaces/Person.dart';
+import 'package:movies/HomeSection/HomePageBody/HomeLists/Shimmers.dart';
+import 'package:movies/models/providers/ProviderHome.dart';
 import 'package:provider/provider.dart';
 
-class PeopleList extends StatelessWidget {
-  const PeopleList({Key? key}) : super(key: key);
+class TrendingList extends StatelessWidget {
+  const TrendingList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ProviderHome>(builder: (context, homeProvider, child) {
-      return homeProvider.isPeopleLoading
+      return homeProvider.isTrendingLoading
           ? const Shimmers()
-          : homeProvider.people.isNotEmpty
+          : homeProvider.trendingItems.isNotEmpty
               ? ListView.builder(
-                  itemCount: homeProvider.people.length,
+                  itemCount: homeProvider.trendingItems.length,
                   itemBuilder: (context, index) {
-                    Person item = homeProvider.people[index];
+                    dynamic item = homeProvider.trendingItems[index];
                     return MovieCard(item: item);
                   },
                   scrollDirection: Axis.horizontal,

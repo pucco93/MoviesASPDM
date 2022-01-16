@@ -12,7 +12,7 @@ class GridViewSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProviderSearch>(builder: (context, searchProvider, child) {
-      return GridView.builder(
+      return searchProvider.isLoading ? const GridViewShimmer() : GridView.builder(
           padding: const EdgeInsets.only(top: 15, bottom: 80),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2),
@@ -20,9 +20,7 @@ class GridViewSearch extends StatelessWidget {
           physics: const ScrollPhysics(),
           itemCount: searchProvider.searchedItems.length,
           itemBuilder: (context, index) {
-            return searchProvider.isLoading
-                ? const GridViewShimmer()
-                : searchProvider.searchedItems.isNotEmpty
+            return searchProvider.searchedItems.isNotEmpty
                     ? GridViewCard(item: searchProvider.searchedItems[index])
                     : const NoElementsFound();
           });

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/Cards/MovieCard.dart';
-import 'package:movies/HomeSection/HomeLists/Shimmers.dart';
-import 'package:movies/Utilities/Utilities.dart';
-import 'package:movies/models/Providers/ProviderHome.dart';
+import 'package:movies/HomeSection/HomePageBody/HomeLists/Shimmers.dart';
+import 'package:movies/models/providers/ProviderHome.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:provider/provider.dart';
 

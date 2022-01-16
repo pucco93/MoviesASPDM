@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'WelcomeSection/WelcomePage.dart';
-import 'package:movies/Utilities/Utilities.dart';
-import 'package:movies/data_manager/DataManager.dart';
+import 'package:movies/models/providers/ProviderFavs.dart';
+import 'package:movies/models/providers/ProviderHome.dart';
+import 'package:movies/models/providers/ProviderSearch.dart';
+import 'package:movies/models/providers/ProviderAccount.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +28,12 @@ class MyApp extends StatelessWidget {
         themeMode = ThemeMode.system;
         break;
     }
-    return MaterialApp(
+    return MultiProvider(providers: [
+        ChangeNotifierProvider<ProviderSearch>(create: (context) => ProviderSearch()),
+        ChangeNotifierProvider<ProviderHome>(create: (context) => ProviderHome()),
+        // ChangeNotifierProvider<ProviderAccount>(create: (context) => ProviderAccount()),
+        // ChangeNotifierProvider<ProviderFavs>(create: (context) => ProviderFavs())
+      ], child: MaterialApp(
       title: 'Movies',
       theme: ThemeData(brightness: Brightness.light, fontFamily: 'Montserrat'),
       darkTheme: ThemeData(
@@ -34,6 +41,6 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: themeMode,
       home: const WelcomePage(),
-    );
+    ));
   }
 }

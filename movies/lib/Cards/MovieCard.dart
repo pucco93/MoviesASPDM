@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:movies/Colors/Colors.dart';
 
 import 'package:movies/Constants/Constants.dart';
+import 'package:movies/DetailsSection/DetailsMoviePage.dart';
+import 'package:movies/DetailsSection/DetailsPersonPage.dart';
+import 'package:movies/DetailsSection/DetailsSeriePage.dart';
 
 class MovieCard extends StatelessWidget {
   const MovieCard({Key? key, required this.item})
@@ -9,8 +11,23 @@ class MovieCard extends StatelessWidget {
 
   final dynamic item;
 
-  _openItem(dynamic item) {
-    
+  _openItem(BuildContext context, dynamic item) {
+    if (item.mediaType == "movie") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsMoviePage(item: item)));
+      } else if (item.mediaType == "tv") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsSeriePage(item: item)));
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsPersonPage(item: item)));
+      }
   }
 
   @override
@@ -22,7 +39,7 @@ class MovieCard extends StatelessWidget {
             ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: InkWell(
-                    onTap: () => _openItem(item),
+                    onTap: () => _openItem(context, item),
                     child: Container(
                         height: 220,
                         width: 145,
