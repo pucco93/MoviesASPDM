@@ -1,5 +1,5 @@
-import 'package:movies/models/Movie.dart';
-import 'package:movies/models/TVSerie.dart';
+import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/TVSerie.dart';
 
 const String bearerV4Token =
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NWUzNjdiYmQ4NDM0Y2ExYzJhNzNkNmM0ZmMyNDAyMiIsInN1YiI6IjYxZDlkMWRhNTVjOTI2MDAxYzJiOTMxYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UQeGEMcj1gHdP9f-4Q0Mx0QMK1iJLWXqo5BlOdfLzwQ";

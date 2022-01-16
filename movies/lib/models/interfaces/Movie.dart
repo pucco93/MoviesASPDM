@@ -1,27 +1,27 @@
-import 'package:movies/models/Provider.dart';
+import 'package:movies/models/interfaces/Provider.dart';
 
-class TVSerie {
+class Movie {
   int id;
-  String name;
-  String originalName;
+  String title;
+  String originalTitle;
   String description;
-  String firstAirDate;
+  String releaseDate;
   num voteAverage;
   String backdropPath;
   String posterPath;
   String originalLanguage;
   List<int> genreIds;
-  double popularity = 0;
+  num popularity;
   num voteCount;
-  String mediaType = "tv";
+  String mediaType = "movie";
   // List<Provider> providers;
 
-  TVSerie(
+  Movie(
     this.id, 
-    this.name,
-    this.originalName,
+    this.title,
+    this.originalTitle,
     this.description, 
-    this.firstAirDate,
+    this.releaseDate,
     this.voteAverage,
     this.backdropPath,
     this.posterPath,

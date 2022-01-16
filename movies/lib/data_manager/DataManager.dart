@@ -1,5 +1,5 @@
-import 'package:movies/models/Movie.dart';
-import 'package:movies/models/TVSerie.dart';
+import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:movies/Constants/Constants.dart';
 import 'package:movies/Utilities/Utilities.dart';
@@ -114,7 +114,7 @@ class DataManager {
     try {
       tempMap = await tmdb.v3.movies.getLatest(language: "it-IT");
       if (!tempMap.containsKey("errors")) {
-        newMovie = Utilities.mapMovie(tempMap["results"]);
+        newMovie = Utilities.mapMovie(tempMap);
         return newMovie;
       }
       return newMovie;
@@ -129,7 +129,7 @@ class DataManager {
     try {
       tempMap = await tmdb.v3.tv.getLatest(language: "it-IT");
       if (!tempMap.containsKey("errors")) {
-        newSerie = Utilities.mapTVSerie(tempMap["results"]);
+        newSerie = Utilities.mapTVSerie(tempMap);
         return newSerie;
       }
       return newSerie;

@@ -1,7 +1,7 @@
-import 'package:movies/models/Movie.dart';
-import 'package:movies/models/TVSerie.dart';
+import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:movies/Constants/Constants.dart';
-import 'package:movies/models/Person.dart';
+import 'package:movies/models/interfaces/Person.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 class Utilities {

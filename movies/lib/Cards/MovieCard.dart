@@ -4,14 +4,13 @@ import 'package:movies/Colors/Colors.dart';
 import 'package:movies/Constants/Constants.dart';
 
 class MovieCard extends StatelessWidget {
-  const MovieCard({Key? key, required this.item, required this.openItem})
+  const MovieCard({Key? key, required this.item})
       : super(key: key);
 
   final dynamic item;
-  final openItem;
 
   _openItem(dynamic item) {
-    openItem(item);
+    
   }
 
   @override
@@ -34,10 +33,14 @@ class MovieCard extends StatelessWidget {
                                     image: '$basePathImages${item.posterPath}',
                                     placeholder:
                                         'assets/images/movie_poster_placeholder.jpeg',
+                                        fit: BoxFit.cover
                                   )
-                                : const Image(
+                                : Container(
+                                          height: 220,
+                                          width: 145,
+                                          child: const FittedBox(child: Image(
                                     image: AssetImage(
-                                        "assets/images/movie_poster_placeholder.jpeg")),
+                                        "assets/images/movie_poster_placeholder.jpeg"),fit: BoxFit.cover,))),
                             Container(
                               height: 220,
                               decoration: BoxDecoration(

@@ -1,5 +1,5 @@
-import 'package:movies/models/Movie.dart';
-import 'package:movies/models/TVSerie.dart';
+import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/TVSerie.dart';
 
 class Person {
   int id;

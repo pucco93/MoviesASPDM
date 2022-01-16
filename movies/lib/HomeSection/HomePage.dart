@@ -4,12 +4,14 @@ import 'package:movies/DetailsSection/DetailsMoviePage.dart';
 import 'package:movies/DetailsSection/DetailsPersonPage.dart';
 import 'package:movies/DetailsSection/DetailsSeriePage.dart';
 import 'package:movies/data_manager/DataManager.dart';
-import 'package:movies/models/Movie.dart';
-import 'package:movies/models/Person.dart';
-import 'package:movies/models/TVSerie.dart';
-import 'package:tmdb_api/tmdb_api.dart';
-
-import 'package:movies/Constants/Constants.dart';
+import 'package:movies/models/providers/ProviderFavs.dart';
+import 'package:movies/models/providers/ProviderHome.dart';
+import 'package:movies/models/providers/ProviderSearch.dart';
+import 'package:movies/models/providers/ProviderAccount.dart';
+import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/Person.dart';
+import 'package:movies/models/interfaces/TVSerie.dart';
+import 'package:provider/provider.dart';
 
 import 'package:movies/SideDrawer/SideDrawer.dart';
 import 'package:movies/BottomNav/BottomNav.dart';
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final _pageOptions = [
       HomePageBody(),
-      const SearchPage(),
+      SearchPage(),
       const ProfilePage(),
       const FavouritesPage(),
     ];
@@ -103,7 +105,12 @@ class _HomePageState extends State<HomePage> {
       drawer: NavDrawer(
         closeDrawer: _closeDrawer,
       ),
-      body: _pageOptions[currentPageIndex],
+      body: MultiProvider(providers: [
+        Provider<ProviderSearch>(create: (context) => ProviderSearch()),
+        Provider<ProviderHome>(create: (context) => ProviderHome()),
+        Provider<ProviderAccount>(create: (context) => ProviderAccount()),
+        Provider<ProviderFavs>(create: (context) => ProviderFavs())
+      ], child: _pageOptions[currentPageIndex]),
       bottomNavigationBar: BottomNav(
           changeCurrentPageIndex: _changeCurrentPageIndex,
           currentPageIndex: currentPageIndex),
@@ -120,199 +127,66 @@ class HomePageBody extends StatefulWidget {
 
 class _HomePageBodyState extends State<HomePageBody> {
   DataManager dataManager = DataManager();
-  bool isTrendingLoading = true;
-  bool isBestMoviesLoading = true;
-  bool isBestSeriesLoading = true;
-  bool isUpcomingMoviesLoading = true;
-  bool isPopularMoviesLoading = true;
-  bool isPopularSeriesLoading = true;
-  bool isPeopleLoading = true;
-  bool isLatestSerieLoading = true;
-  bool isLatestMovieLoading = true;
-  List<dynamic> trendingItems = [];
-  List<Movie> bestMovies = [];
-  List<TVSerie> bestSeries = [];
-  List<Movie> upcomingMovies = [];
-  List<Movie> popularMovies = [];
-  List<TVSerie> popularSeries = [];
-  List<Person> people = [];
-  TVSerie latestSerie = initialSerie;
-  Movie latestMovie = initialMovie;
 
-  updateTrendingLoader() {
-    if (mounted) {
-      setState(() {
-        isTrendingLoading = !isTrendingLoading;
-      });
-    }
-  }
-
-  updateUpcomingLoader() {
-    if (mounted) {
-      setState(() {
-        isUpcomingMoviesLoading = !isUpcomingMoviesLoading;
-      });
-    }
-  }
-
-  updateLatestMovieLoader() {
-    if (mounted) {
-      setState(() {
-        isLatestMovieLoading = !isLatestMovieLoading;
-      });
-    }
-  }
-
-  updateLatestSerieLoader() {
-    if (mounted) {
-      setState(() {
-        isLatestSerieLoading = !isLatestSerieLoading;
-      });
-    }
-  }
-
-  updatePopularMoviesLoader() {
-    if (mounted) {
-      setState(() {
-        isPopularMoviesLoading = !isPopularMoviesLoading;
-      });
-    }
-  }
-
-  updatePopularSeriesLoader() {
-    if (mounted) {
-      setState(() {
-        isPopularSeriesLoading = !isPopularSeriesLoading;
-      });
-    }
-  }
-
-  updateBestMoviesLoader() {
-    if (mounted) {
-      setState(() {
-        isBestMoviesLoading = !isBestMoviesLoading;
-      });
-    }
-  }
-
-  updateBestSeriesLoader() {
-    if (mounted) {
-      setState(() {
-        isBestSeriesLoading = !isBestSeriesLoading;
-      });
-    }
-  }
-
-  updatePeopleLoader() {
-    if (mounted) {
-      setState(() {
-        isPeopleLoading = !isPeopleLoading;
-      });
-    }
-  }
-
-  _getTrending() async {
+  _getTrending(ProviderHome homeProvider) async {
     List<dynamic> newTrendingItems = await dataManager.getTrending();
-    if (mounted) {
-      setState(() {
-        trendingItems = newTrendingItems;
-      });
-    }
-    updateTrendingLoader();
+    homeProvider.updateTrendingItems(newTrendingItems);
   }
 
-  _getUpcomingMovies() async {
+  _getUpcomingMovies(ProviderHome homeProvider) async {
     List<Movie> newUpcomingMovies = await dataManager.getUpcomingMovies();
-    if (mounted) {
-      setState(() {
-        upcomingMovies = newUpcomingMovies;
-      });
-    }
-    updateUpcomingLoader();
+    homeProvider.updateUpcomingMovies(newUpcomingMovies);
   }
 
-  _getLatestMovie() async {
+  _getLatestMovie(ProviderHome homeProvider) async {
     Movie newLatestMovie = await dataManager.getLatestMovie();
-    if (mounted) {
-      setState(() {
-        latestMovie = newLatestMovie;
-      });
-    }
-    updateLatestMovieLoader();
+    homeProvider.updateLatestMovie(newLatestMovie);
   }
 
-  _getLatestSerie() async {
+  _getLatestSerie(ProviderHome homeProvider) async {
     TVSerie newLatestSerie = await dataManager.getLatestSerie();
-    if (mounted) {
-      setState(() {
-        latestSerie = newLatestSerie;
-      });
-    }
-    updateLatestSerieLoader();
+    homeProvider.updateLatestSerie(newLatestSerie);
   }
 
-  _getPopularMovies() async {
+  _getPopularMovies(ProviderHome homeProvider) async {
     List<Movie> newPopularMovies = await dataManager.getPopularMovies();
-    if (mounted) {
-      setState(() {
-        popularMovies = newPopularMovies;
-      });
-    }
-    updatePopularMoviesLoader();
+    homeProvider.updatePopularMovies(newPopularMovies);
   }
 
-  _getPopularSeries() async {
+  _getPopularSeries(ProviderHome homeProvider) async {
     List<TVSerie> newPopularSeries = await dataManager.getPopularTVSeries();
-    if (mounted) {
-      setState(() {
-        popularSeries = newPopularSeries;
-      });
-    }
-    updatePopularSeriesLoader();
+    homeProvider.updatePopularSeries(newPopularSeries);
   }
 
-  _getBestMovies() async {
+  _getBestMovies(ProviderHome homeProvider) async {
     List<Movie> newBestMovies = await dataManager.getBestMovies();
-    if (mounted) {
-      setState(() {
-        bestMovies = newBestMovies;
-      });
-    }
-    updateBestMoviesLoader();
+    homeProvider.updateBestMovies(newBestMovies);
   }
 
-  _getBestSeries() async {
+  _getBestSeries(ProviderHome homeProvider) async {
     List<TVSerie> newBestSeries = await dataManager.getBestSeries();
-    if (mounted) {
-      setState(() {
-        bestSeries = newBestSeries;
-      });
-    }
-    updateBestSeriesLoader();
+    homeProvider.updateBestSeries(newBestSeries);
   }
 
-  _getPeople() async {
+  _getPeople(ProviderHome homeProvider) async {
     List<Person> newPeople = await dataManager.getPopularPeople();
-    if (mounted) {
-      setState(() {
-        people = newPeople;
-      });
-    }
-    updatePeopleLoader();
+    homeProvider.updatePeople(newPeople);
   }
 
   @override
   void initState() {
+    ProviderHome homeProvider =
+        Provider.of<ProviderHome>(context, listen: false);
+    _getTrending(homeProvider);
+    _getUpcomingMovies(homeProvider);
+    _getBestMovies(homeProvider);
+    _getBestSeries(homeProvider);
+    _getLatestMovie(homeProvider);
+    _getLatestSerie(homeProvider);
+    _getPopularMovies(homeProvider);
+    _getPopularSeries(homeProvider);
+    _getPeople(homeProvider);
     super.initState();
-    _getTrending();
-    _getUpcomingMovies();
-    _getBestMovies();
-    _getBestSeries();
-    _getLatestMovie();
-    _getLatestSerie();
-    _getPopularMovies();
-    _getPopularSeries();
-    _getPeople();
   }
 
   @override
@@ -350,11 +224,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: HorizontalTrendingMoviesList(
-              items: trendingItems,
-              openItem: openItem,
-              isLoading: isTrendingLoading,
-            )),
+            child: const TrendingList()),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -362,7 +232,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 padding: EdgeInsets.only(left: 15),
                 child: Text("Latest movie", style: TextStyle(fontSize: 20)))),
         const Padding(padding: EdgeInsets.only(top: 20)),
-        PreviewLatestMovie(movie: latestMovie, isLoading: isLatestMovieLoading),
+        const PreviewLatestMovie(),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -375,10 +245,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: MoviesList(
-                movies: upcomingMovies,
-                openItem: openItem,
-                isLoading: isUpcomingMoviesLoading)),
+            child: const MoviesList(type: "upcoming")),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -390,10 +257,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: MoviesList(
-                movies: bestMovies,
-                openItem: openItem,
-                isLoading: isBestMoviesLoading)),
+            child: const MoviesList(type: "best")),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -405,10 +269,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: SeriesList(
-                series: bestSeries,
-                openItem: openItem,
-                isLoading: isBestSeriesLoading)),
+            child: SeriesList(type: "best")),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -417,7 +278,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 child:
                     Text("Latest TV serie", style: TextStyle(fontSize: 20)))),
         const Padding(padding: EdgeInsets.only(top: 20)),
-        PreviewLatestSerie(serie: latestSerie, isLoading: isLatestSerieLoading),
+        const PreviewLatestSerie(),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -429,10 +290,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: MoviesList(
-                movies: popularMovies,
-                openItem: openItem,
-                isLoading: isPopularMoviesLoading)),
+            child: const MoviesList(type: "popular")),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -444,10 +302,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: SeriesList(
-                series: popularSeries,
-                openItem: openItem,
-                isLoading: isPopularSeriesLoading)),
+            child: SeriesList(type: "popular")),
         const Padding(padding: EdgeInsets.only(top: 30)),
         const Align(
             alignment: Alignment.centerLeft,
@@ -459,12 +314,10 @@ class _HomePageBodyState extends State<HomePageBody> {
             height: 220,
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft,
-            child: PeopleList(
-                people: people,
-                openItem: openItem,
-                isLoading: isPeopleLoading)),
-        const Padding(padding: EdgeInsets.only(top: 80)),
+            child: const PeopleList()),
+        const Padding(padding: EdgeInsets.only(top: 90)),
       ],
-    ));
+    )
+  );
   }
 }

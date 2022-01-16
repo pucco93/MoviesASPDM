@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/Colors/Colors.dart';
 import 'package:movies/SignUpSection/SignUpPage.dart';
-import 'package:movies/models/User.dart';
+import 'package:movies/models/interfaces/User.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);

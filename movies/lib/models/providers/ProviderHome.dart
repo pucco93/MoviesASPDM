@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+import 'package:movies/Constants/Constants.dart';
+import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/Person.dart';
+import 'package:movies/models/interfaces/TVSerie.dart';
+
+class ProviderHome extends ChangeNotifier {
+  bool _isTrendingLoading = true;
+  bool _isBestMoviesLoading = true;
+  bool _isBestSeriesLoading = true;
+  bool _isUpcomingMoviesLoading = true;
+  bool _isPopularMoviesLoading = true;
+  bool _isPopularSeriesLoading = true;
+  bool _isPeopleLoading = true;
+  bool _isLatestSerieLoading = true;
+  bool _isLatestMovieLoading = true;
+  List<dynamic> _trendingItems = [];
+  List<Movie> _bestMovies = [];
+  List<TVSerie> _bestSeries = [];
+  List<Movie> _upcomingMovies = [];
+  List<Movie> _popularMovies = [];
+  List<TVSerie> _popularSeries = [];
+  List<Person> _people = [];
+  TVSerie _latestSerie = initialSerie;
+  Movie _latestMovie = initialMovie;
+
+  bool get isTrendingLoading => _isTrendingLoading;
+  bool get isBestMoviesLoading => _isBestMoviesLoading;
+  bool get isBestSeriesLoading => _isBestSeriesLoading;
+  bool get isUpcomingMoviesLoading => _isUpcomingMoviesLoading;
+  bool get isPopularMoviesLoading => _isPopularMoviesLoading;
+  bool get isPopularSeriesLoading => _isPopularSeriesLoading;
+  bool get isPeopleLoading => _isPeopleLoading;
+  bool get isLatestSerieLoading => _isLatestSerieLoading;
+  bool get isLatestMovieLoading => _isLatestMovieLoading;
+  List<dynamic> get trendingItems => _trendingItems;
+  List<Movie> get bestMovies => _bestMovies;
+  List<TVSerie> get bestSeries => _bestSeries;
+  List<Movie> get upcomingMovies => _upcomingMovies;
+  List<Movie> get popularMovies => _popularMovies;
+  List<TVSerie> get popularSeries => _popularSeries;
+  List<Person> get people => _people;
+  TVSerie get latestSerie => _latestSerie;
+  Movie get latestMovie => _latestMovie;
+
+  updateTrendingLoader(bool newValue) {
+    _isTrendingLoading = newValue;
+    notifyListeners();
+  }
+
+  updateUpcomingLoader(bool newValue) {
+    _isUpcomingMoviesLoading = newValue;
+    notifyListeners();
+  }
+
+  updateLatestMovieLoader(bool newValue) {
+    _isLatestMovieLoading = newValue;
+    notifyListeners();
+  }
+
+  updateLatestSerieLoader(bool newValue) {
+    _isLatestSerieLoading = newValue;
+    notifyListeners();
+  }
+
+  updatePopularMoviesLoader(bool newValue) {
+    _isPopularMoviesLoading = newValue;
+    notifyListeners();
+  }
+
+  updatePopularSeriesLoader(bool newValue) {
+    _isPopularSeriesLoading = newValue;
+    notifyListeners();
+  }
+
+  updateBestMoviesLoader(bool newValue) {
+    _isBestMoviesLoading = newValue;
+    notifyListeners();
+  }
+
+  updateBestSeriesLoader(bool newValue) {
+    _isBestSeriesLoading = !_isBestSeriesLoading;
+    notifyListeners();
+  }
+
+  updatePeopleLoader(bool newValue) {
+    _isPeopleLoading = !isPeopleLoading;
+    notifyListeners();
+  }
+
+  updateTrendingItems(List<dynamic> items) {
+    _trendingItems = items;
+    updateTrendingLoader(false);
+  }
+
+  updateUpcomingMovies(List<Movie> items) {
+    _upcomingMovies = items;
+    updateUpcomingLoader(false);
+  }
+
+  updateLatestMovie(Movie item) {
+    _latestMovie = item;
+    updateLatestMovieLoader(false);
+  }
+
+  updateLatestSerie(TVSerie item) {
+    _latestSerie = item;
+    updateLatestSerieLoader(false);
+  }
+
+  updatePopularMovies(List<Movie> items) {
+    _popularMovies = items;
+    updatePopularMoviesLoader(false);
+  }
+
+  updatePopularSeries(List<TVSerie> items) {
+    _popularSeries = items;
+    updatePopularSeriesLoader(false);
+  }
+
+  updateBestMovies(List<Movie> items) {
+    _bestMovies = items;
+    updateBestMoviesLoader(false);
+  }
+
+  updateBestSeries(List<TVSerie> items) {
+    _bestSeries = items;
+    updateBestSeriesLoader(false);
+  }
+
+  updatePeople(List<Person> items) {
+    _people = items;
+    updatePeopleLoader(false);
+  }
+}
