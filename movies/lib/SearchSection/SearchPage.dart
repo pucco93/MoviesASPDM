@@ -16,6 +16,13 @@ class _SearchPageState extends State<SearchPage> {
   final _searchController = TextEditingController();
   DataManager dataManager = DataManager();
 
+  final ButtonStyle _searchButtonStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20),
+      primary: ColorSelect.customBlue,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ));
+
   updateSearchText(ProviderSearch searchProvider) {
     searchProvider.updateSearchText(_searchController.text);
   }
@@ -36,13 +43,6 @@ class _SearchPageState extends State<SearchPage> {
     searchProvider.updateIsSearch(true);
     searchProvider.updateLoader(false);
   }
-
-  final ButtonStyle _searchButtonStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20),
-      primary: ColorSelect.customBlue,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ));
 
   _filterClick(ProviderSearch searchProvider) {
     searchProvider.updateLoader(true);
@@ -108,7 +108,16 @@ class _SearchPageState extends State<SearchPage> {
                   fillColor: Colors.white),
             )),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+            child: Container(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                    style: _searchButtonStyle,
+                    onPressed: () => _searchItems(searchProvider),
+                    child: const Text("Search")))),
+        Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
             child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white70,
@@ -135,15 +144,6 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   }).toList(),
                 ))),
-        Padding(
-            padding: const EdgeInsets.only(bottom: 0, left: 15, right: 15),
-            child: Container(
-                width: 380,
-                height: 45,
-                child: ElevatedButton(
-                    style: _searchButtonStyle,
-                    onPressed: () => _searchItems(searchProvider),
-                    child: const Text("Search")))),
         searchProvider.isSearch
             ? const Align(
                 alignment: Alignment.centerLeft,

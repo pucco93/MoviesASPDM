@@ -5,6 +5,7 @@ import 'package:movies/models/interfaces/Person.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 
 class ProviderHome extends ChangeNotifier {
+  int _currentPageIndex = 0;
   bool _isTrendingLoading = true;
   bool _isBestMoviesLoading = true;
   bool _isBestSeriesLoading = true;
@@ -23,7 +24,9 @@ class ProviderHome extends ChangeNotifier {
   List<Person> _people = [];
   TVSerie _latestSerie = initialSerie;
   Movie _latestMovie = initialMovie;
+  late GlobalKey<ScaffoldState> _scaffoldKey;
 
+  int get currentPageIndex => _currentPageIndex;
   bool get isTrendingLoading => _isTrendingLoading;
   bool get isBestMoviesLoading => _isBestMoviesLoading;
   bool get isBestSeriesLoading => _isBestSeriesLoading;
@@ -42,6 +45,12 @@ class ProviderHome extends ChangeNotifier {
   List<Person> get people => _people;
   TVSerie get latestSerie => _latestSerie;
   Movie get latestMovie => _latestMovie;
+  GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
+
+  updateCurrentPageIndex(int newIndex) {
+    _currentPageIndex = newIndex;
+    notifyListeners();
+  }
 
   updateTrendingLoader(bool newValue) {
     _isTrendingLoading = newValue;
@@ -140,5 +149,9 @@ class ProviderHome extends ChangeNotifier {
     _people = items;
     updatePeopleLoader(false);
     notifyListeners();
+  }
+
+  updateScaffoldKey(GlobalKey<ScaffoldState> newScaffoldKey) {
+    _scaffoldKey = newScaffoldKey;
   }
 }

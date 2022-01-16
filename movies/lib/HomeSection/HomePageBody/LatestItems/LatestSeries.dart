@@ -38,6 +38,8 @@ class PreviewLatestSerie extends StatelessWidget {
                                 children: [
                                   homeProvider.latestSerie.backdropPath != ""
                                       ? FadeInImage.assetNetwork(
+                              height: 300,
+                              width: 600,
                                           image:
                                               '$basePathImages${homeProvider.latestSerie.backdropPath}',
                                           placeholder:

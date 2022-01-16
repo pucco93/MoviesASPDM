@@ -36,6 +36,8 @@ class PreviewLatestMovie extends StatelessWidget {
                                 children: [
                                   homeProvider.latestMovie.backdropPath != ""
                                       ? FadeInImage.assetNetwork(
+                              height: 300,
+                              width: 600,
                                           image:
                                               '$basePathImages${homeProvider.latestMovie.backdropPath}',
                                           placeholder:

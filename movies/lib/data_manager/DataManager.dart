@@ -183,4 +183,19 @@ class DataManager {
       return [];
     }
   }
+
+  getFavs() async {
+    Map<dynamic, dynamic> tempMap = {};
+    List<dynamic> newList = [];
+    try {
+      tempMap = {};
+      if (!tempMap.containsKey("errors")) {
+        newList = Utilities.mapGenericItem(tempMap["results"]);
+        return newList;
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  }
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movies/Constants/Constants.dart';
-import 'package:movies/DetailsSection/DetailsMoviePage.dart';
-import 'package:movies/DetailsSection/DetailsPersonPage.dart';
-import 'package:movies/DetailsSection/DetailsSeriePage.dart';
 import 'package:provider/provider.dart';
 
 class GridViewCard extends StatelessWidget {
@@ -10,24 +7,7 @@ class GridViewCard extends StatelessWidget {
 
   final dynamic item;
 
-  _openItem(BuildContext context, dynamic item) {
-    if (item.mediaType == "movie") {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailsMoviePage(item: item)));
-      } else if (item.mediaType == "tv") {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailsSeriePage(item: item)));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailsPersonPage(item: item)));
-      }
-  }
+  _openItem() {}
 
   _checkImages(dynamic item) {
     if (item.mediaType == "person" && item.posterPath != "") {

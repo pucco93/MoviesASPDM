@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(providers: [
         ChangeNotifierProvider<ProviderSearch>(create: (context) => ProviderSearch()),
         ChangeNotifierProvider<ProviderHome>(create: (context) => ProviderHome()),
-        // ChangeNotifierProvider<ProviderAccount>(create: (context) => ProviderAccount()),
-        // ChangeNotifierProvider<ProviderFavs>(create: (context) => ProviderFavs())
+        ChangeNotifierProvider<ProviderAccount>(create: (context) => ProviderAccount()),
+        ChangeNotifierProvider<ProviderFavs>(create: (context) => ProviderFavs())
       ], child: MaterialApp(
       title: 'Movies',
       theme: ThemeData(brightness: Brightness.light, fontFamily: 'Montserrat'),
