@@ -1,4 +1,6 @@
 import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/MovieDetails.dart';
+import 'package:movies/models/interfaces/Person.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 
 const String bearerV4Token =
@@ -9,6 +11,8 @@ const String v3Token = "45e367bbd8434ca1c2a73d6c4fc24022";
 const String basePathImages = "https://image.tmdb.org/t/p/original";
 
 const String mediaType = "media_type";
+
+const String youtubePath = "https://www.youtube.com/watch?v=";
 
 // Movies internal names
 const String movieID = "id";
@@ -51,6 +55,11 @@ Movie initialMovie = Movie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 
 // Initial state TVSerie
 TVSerie initialSerie = TVSerie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
+
+// Initial state person
+Person initialPerson = Person(0, "", "", [], 0, "");
+
+MovieDetails initialMovieDetails = MovieDetails(0, "");
 
 // Genre ids in a map to be easier to access in
 Map genreIds = {

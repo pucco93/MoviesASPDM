@@ -1,4 +1,5 @@
 import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/MovieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:movies/Constants/Constants.dart';
@@ -196,6 +197,21 @@ class DataManager {
       return [];
     } catch (error) {
       return [];
+    }
+  }
+
+  getMovieDetails(int itemId) async {
+    Map<dynamic, dynamic> tempMap = {};
+    MovieDetails movieDetails = initialMovieDetails;
+    try {
+      tempMap = await tmdb.v3.movies.getDetails(itemId);
+      if (!tempMap.containsKey("errors")) {
+        movieDetails = Utilities.mapMovieDetails(tempMap);
+        return movieDetails;
+      }
+      return null;
+    } catch (error) {
+      return null;
     }
   }
 }

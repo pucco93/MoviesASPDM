@@ -1,4 +1,5 @@
 import 'package:movies/models/interfaces/Movie.dart';
+import 'package:movies/models/interfaces/MovieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:movies/Constants/Constants.dart';
 import 'package:movies/models/interfaces/Person.dart';
@@ -28,7 +29,7 @@ class Utilities {
 
   static List<Movie> mapMovies(dynamic unmapped) {
     List<Movie> movies = [];
-    if(unmapped != null && unmapped.isNotEmpty) {
+    if (unmapped != null && unmapped.isNotEmpty) {
       unmapped.forEach((item) {
         movies.add(mapMovie(item));
       });
@@ -104,6 +105,12 @@ class Utilities {
         mapped.add(mapPerson(item));
       });
     }
+    return mapped;
+  }
+
+  static MovieDetails mapMovieDetails(dynamic unmapped) {
+    MovieDetails mapped = initialMovieDetails;
+    unmapped;
     return mapped;
   }
 }

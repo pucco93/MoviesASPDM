@@ -8,16 +8,13 @@ import 'package:provider/provider.dart';
 class PreviewLatestMovie extends StatelessWidget {
   const PreviewLatestMovie({Key? key}) : super(key: key);
 
-    _openMovie(Movie movie, context) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailsMoviePage(item: movie)));
-    }
+  _openMovie(Movie movie, context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => DetailsMoviePage(item: movie)));
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<ProviderHome>(builder: (context, homeProvider, child) {
       return homeProvider.isLatestMovieLoading
           ? const ShimmerMovie()
@@ -28,7 +25,8 @@ class PreviewLatestMovie extends StatelessWidget {
                   ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: InkWell(
-                          onTap: () => _openMovie(homeProvider.latestMovie, context),
+                          onTap: () =>
+                              _openMovie(homeProvider.latestMovie, context),
                           child: Container(
                               height: 300,
                               width: 600,
@@ -36,8 +34,8 @@ class PreviewLatestMovie extends StatelessWidget {
                                 children: [
                                   homeProvider.latestMovie.backdropPath != ""
                                       ? FadeInImage.assetNetwork(
-                              height: 300,
-                              width: 600,
+                                          height: 300,
+                                          width: 600,
                                           image:
                                               '$basePathImages${homeProvider.latestMovie.backdropPath}',
                                           placeholder:

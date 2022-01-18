@@ -6,14 +6,16 @@ import 'package:movies/Colors/Colors.dart';
 import 'package:movies/Constants/Constants.dart';
 
 class DetailsPersonPage extends StatelessWidget {
-  DetailsPersonPage({Key? key, required this.item}) : super(key: key);
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  const DetailsPersonPage({Key? key, required this.item}) : super(key: key);
 
   final dynamic item;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
       appBar: const CustomAppBar(),
       bottomNavigationBar: BottomNav(),
       // body: 
