@@ -45,7 +45,7 @@ class MovieCard extends StatelessWidget {
                         width: 145,
                         child: Stack(
                           children: [
-                            item.posterPath != ""
+                            item?.posterPath != ""
                                 ? FadeInImage.assetNetwork(
                                     image: '$basePathImages${item.posterPath}',
                                     placeholder:
@@ -67,7 +67,7 @@ class MovieCard extends StatelessWidget {
                                       end: FractionalOffset.bottomCenter,
                                       colors: [
                                         Colors.grey.withOpacity(0.0),
-                                        Colors.black,
+                                        const Color.fromARGB(255, 30, 30, 30),
                                       ],
                                       stops: const [
                                         0.0,

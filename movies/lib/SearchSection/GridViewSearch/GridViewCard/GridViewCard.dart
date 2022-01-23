@@ -56,7 +56,7 @@ class GridViewCard extends StatelessWidget {
           child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: InkWell(
-                  onTap: () => _openItem,
+                  onTap: () => _openItem(context, item),
                   child: Container(
                     alignment: Alignment.center,
                     width: 200,

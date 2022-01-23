@@ -60,7 +60,7 @@ class PreviewLatestMovie extends StatelessWidget {
                                             end: FractionalOffset.bottomCenter,
                                             colors: [
                                               Colors.grey.withOpacity(0.0),
-                                              Colors.black,
+                                              Colors.black87,
                                             ],
                                             stops: const [
                                               0.0,

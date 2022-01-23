@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:movies/Colors/Colors.dart';
 import 'package:movies/FavouritesSection/GridItemShimmer.dart';
 import 'package:movies/FavouritesSection/GridViewCard/GridViewCard.dart';
@@ -17,15 +18,18 @@ class _FavouritesPageState extends State<FavouritesPage> {
   DataManager dataManager = DataManager();
 
   void _getFavs(ProviderFavs favProvider) async {
+    favProvider.updateLoading(true);
     List<dynamic> newList = await dataManager.getFavs();
     favProvider.updateFavItems(newList);
   }
 
   @override
   void initState() {
-    ProviderFavs favProvider =
-        Provider.of<ProviderFavs>(context, listen: false);
-    _getFavs(favProvider);
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      ProviderFavs favProvider =
+          Provider.of<ProviderFavs>(context, listen: false);
+      _getFavs(favProvider);
+    });
     super.initState();
   }
 

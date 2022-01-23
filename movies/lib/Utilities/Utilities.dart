@@ -1,9 +1,11 @@
 import 'package:movies/models/interfaces/Movie.dart';
 import 'package:movies/models/interfaces/MovieDetails.dart';
+import 'package:movies/models/interfaces/PersonDetails.dart';
+import 'package:movies/models/interfaces/Provider.dart';
+import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:movies/Constants/Constants.dart';
 import 'package:movies/models/interfaces/Person.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 
 class Utilities {
   static Movie mapMovie(dynamic item) {
@@ -109,8 +111,157 @@ class Utilities {
   }
 
   static MovieDetails mapMovieDetails(dynamic unmapped) {
-    MovieDetails mapped = initialMovieDetails;
-    unmapped;
-    return mapped;
+    List<int> genreIDs = [];
+    List<String> gallery = [];
+    List<Provider> watchProviders = [];
+    List<dynamic> similars = [];
+    String trailer = "";
+    if (unmapped[movieGenres] != null) {
+      unmapped[movieGenres]
+          ?.forEach((element) => {genreIDs.add(element["id"] as int)});
+    }
+    if (unmapped[movieDetailsImages] != null &&
+        unmapped[movieDetailsImages][movieDetailsBackdrops] != null) {
+      unmapped[movieDetailsImages][movieDetailsBackdrops]
+          ?.forEach((element) => {gallery.add(element[movieDetailsFilePath])});
+    }
+    if (unmapped[movieDetailsSimilars] != null &&
+        unmapped[movieDetailsSimilars]["results"] != null) {
+      dynamic tempList = [
+        ...Utilities.mapMovies(unmapped[movieDetailsSimilars]?["results"])
+      ];
+      similars = tempList?.length > 10 ? tempList.sublist(0, 10) : tempList;
+    }
+    if (unmapped[movieDetailsWatchProviders] != null &&
+        unmapped[movieDetailsWatchProviders]["results"] != null &&
+        unmapped[movieDetailsWatchProviders]["results"][itLanguage] != null &&
+        unmapped[movieDetailsWatchProviders]["results"][itLanguage]
+                [streaming] !=
+            null) {
+      unmapped[movieDetailsWatchProviders]["results"][itLanguage][streaming]
+          ?.forEach((element) => {
+                watchProviders
+                    .add(Provider(element[providerName], element[providerLogo]))
+              });
+    }
+    if (unmapped[movieDetailsTrailer] != null &&
+        unmapped[movieDetailsTrailer]["results"] != null &&
+        unmapped[movieDetailsTrailer]["results"].isNotEmpty &&
+        unmapped[movieDetailsTrailer]["results"][0]["id"] != null) {
+      trailer = unmapped[movieDetailsTrailer]["results"][0]["id"];
+    }
+    MovieDetails movieDetails = MovieDetails(
+        unmapped[movieDetailsRuntime] ?? 0,
+        unmapped[movieDetailsHomepage] ?? "",
+        trailer,
+        gallery,
+        watchProviders,
+        similars,
+        unmapped[movieID],
+        unmapped[movieTitle] ?? "",
+        unmapped[movieOgTitle] ?? "",
+        unmapped[movieOverview] ?? "",
+        unmapped[movieReleaseDate] ?? "",
+        unmapped[movieVoteAvg] ?? 0,
+        unmapped[moviebdPath] ?? "",
+        unmapped[moviePosterPath] ?? "",
+        unmapped[movieOgLanguage] ?? "",
+        genreIDs,
+        unmapped[moviePopularity] ?? 0,
+        unmapped[movieVoteCount] ?? 0,
+        unmapped[mediaType] ?? "movie");
+
+    return movieDetails;
+  }
+
+  static SerieDetails mapSerieDetails(dynamic unmapped) {
+    List<int> genreIDs = [];
+    List<String> gallery = [];
+    List<Provider> watchProviders = [];
+    List<dynamic> similars = [];
+    String trailer = "";
+    if (unmapped[movieGenres] != null) {
+      unmapped[movieGenres]
+          ?.forEach((element) => {genreIDs.add(element["id"] as int)});
+    }
+    if (unmapped[movieDetailsImages] != null &&
+        unmapped[movieDetailsImages][movieDetailsBackdrops] != null) {
+      unmapped[movieDetailsImages][movieDetailsBackdrops]
+          ?.forEach((element) => {gallery.add(element[movieDetailsFilePath])});
+    }
+    if (unmapped[movieDetailsSimilars] != null &&
+        unmapped[movieDetailsSimilars]["results"] != null) {
+      similars = [
+        ...Utilities.mapTVSeries(unmapped[movieDetailsSimilars]["results"])
+      ].sublist(0, 10);
+    }
+    if (unmapped[movieDetailsWatchProviders] != null &&
+        unmapped[movieDetailsWatchProviders]["results"] != null &&
+        unmapped[movieDetailsWatchProviders]["results"][itLanguage] != null &&
+        unmapped[movieDetailsWatchProviders]["results"][itLanguage]
+                [streaming] !=
+            null) {
+      unmapped[movieDetailsWatchProviders]["results"][itLanguage][streaming]
+          ?.forEach((element) => {
+                watchProviders
+                    .add(Provider(element[providerName], element[providerLogo]))
+              });
+    }
+    if (unmapped[movieDetailsTrailer] != null &&
+        unmapped[movieDetailsTrailer]["results"] != null &&
+        unmapped[movieDetailsTrailer]["results"][0] != null &&
+        unmapped[movieDetailsTrailer]["results"][0]["id"] != null) {
+      trailer = unmapped[movieDetailsTrailer]["results"][0]["id"];
+    }
+
+    SerieDetails serieDetails = SerieDetails(
+        unmapped[serieSeasons] ?? 0,
+        unmapped[serieEpisodes] ?? 0,
+        unmapped[movieDetailsHomepage] ?? "",
+        trailer,
+        gallery,
+        watchProviders,
+        similars,
+        unmapped[serieID],
+        unmapped[serieName] ?? "",
+        unmapped[serieOgName] ?? "",
+        unmapped[serieOverview] ?? "",
+        unmapped[serieFirstAirDate] ?? "",
+        unmapped[serieVoteAvg] ?? 0,
+        unmapped[seriebdPath] ?? "",
+        unmapped[seriePosterPath] ?? "",
+        unmapped[serieOgLanguage] ?? "",
+        genreIDs,
+        unmapped[seriePopularity] ?? 0,
+        unmapped[serieVoteCount] ?? 0,
+        unmapped[mediaType] ?? "tv");
+
+    return serieDetails;
+  }
+
+  static PersonDetails mapPersonDetails(dynamic unmapped) {
+    List<String> gallery = [];
+    if (unmapped[movieDetailsImages] != null &&
+        unmapped[movieDetailsImages][movieDetailsBackdrops] != null) {
+      unmapped[movieDetailsImages][movieDetailsBackdrops]
+          ?.forEach((element) => {gallery.add(element[movieDetailsFilePath])});
+    }
+    PersonDetails personDetails = PersonDetails(
+        unmapped[movieDetailsHomepage] ?? "",
+        gallery,
+        unmapped[personBirthday] ?? "",
+        unmapped[personDeathday] ?? "",
+        unmapped[personAlsoKnownAs] ?? "",
+        unmapped[personBiography] ?? "",
+        unmapped[personPlaceOfBirth] ?? "",
+        unmapped[personId] ?? "",
+        unmapped[personName] ?? "",
+        unmapped[personDepartment] ?? "",
+        [...Utilities.mapMovies(unmapped[personKnownFor])],
+        unmapped[personPopularity] ?? "",
+        unmapped[personProfilePath] ?? "",
+        unmapped[mediaType] ?? "person");
+
+    return personDetails;
   }
 }

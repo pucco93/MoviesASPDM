@@ -1,5 +1,9 @@
 import 'package:movies/models/interfaces/Movie.dart';
 import 'package:movies/models/interfaces/MovieDetails.dart';
+import 'package:movies/models/interfaces/Person.dart';
+import 'package:movies/models/interfaces/PersonDetails.dart';
+import 'package:movies/models/interfaces/Provider.dart';
+import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:movies/Constants/Constants.dart';
@@ -65,7 +69,7 @@ class DataManager {
 
   getBestMovies() async {
     Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
+    List<Movie> newList = [];
     try {
       tempMap = await tmdb.v3.movies.getTopRated(language: "it-IT");
       if (!tempMap.containsKey("errors")) {
@@ -80,7 +84,7 @@ class DataManager {
 
   getBestSeries() async {
     Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
+    List<TVSerie> newList = [];
     try {
       tempMap = await tmdb.v3.tv.getTopRated(language: "it-IT");
       if (!tempMap.containsKey("errors")) {
@@ -95,7 +99,7 @@ class DataManager {
 
   getUpcomingMovies() async {
     Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
+    List<Movie> newList = [];
     try {
       tempMap =
           await tmdb.v3.movies.getUpcoming(language: "it-IT", region: "IT");
@@ -141,7 +145,7 @@ class DataManager {
 
   getPopularMovies() async {
     Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
+    List<Movie> newList = [];
     try {
       tempMap =
           await tmdb.v3.movies.getPouplar(language: "it-IT", region: "IT");
@@ -157,7 +161,7 @@ class DataManager {
 
   getPopularTVSeries() async {
     Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
+    List<TVSerie> newList = [];
     try {
       tempMap = await tmdb.v3.tv.getPouplar(language: "it-IT");
       if (!tempMap.containsKey("errors")) {
@@ -172,7 +176,7 @@ class DataManager {
 
   getPopularPeople() async {
     Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
+    List<Person> newList = [];
     try {
       tempMap = await tmdb.v3.people.getPopular(language: "it-IT");
       if (!tempMap.containsKey("errors")) {
@@ -204,12 +208,51 @@ class DataManager {
     Map<dynamic, dynamic> tempMap = {};
     MovieDetails movieDetails = initialMovieDetails;
     try {
-      tempMap = await tmdb.v3.movies.getDetails(itemId);
-      if (!tempMap.containsKey("errors")) {
+      tempMap = await tmdb.v3.movies.getDetails(itemId,
+          language: "it-IT",
+          appendToResponse: "videos,images,watch/providers,similar");
+      if (!tempMap.containsKey("errors") &&
+          !tempMap[movieDetailsTrailer].containsKey("errors") &&
+          !tempMap[movieDetailsSimilars].containsKey("errors") &&
+          !tempMap[movieDetailsImages].containsKey("errors") &&
+          !tempMap[movieDetailsWatchProviders].containsKey("errors")) {
         movieDetails = Utilities.mapMovieDetails(tempMap);
         return movieDetails;
       }
       return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  getSerieDetails(int id) async {
+    Map<dynamic, dynamic> tempMap = {};
+    SerieDetails serieDetails = initialSerieDetails;
+    try {
+      tempMap = await tmdb.v3.tv.getDetails(id, appendToResponse: "videos,images,watch/providers,similar");
+      if(!tempMap.containsKey("errors") &&
+          !tempMap[movieDetailsTrailer].containsKey("errors") &&
+          !tempMap[movieDetailsSimilars].containsKey("errors") &&
+          !tempMap[movieDetailsImages].containsKey("errors") &&
+          !tempMap[movieDetailsWatchProviders].containsKey("errors")) {
+        serieDetails = Utilities.mapSerieDetails(tempMap);
+        return serieDetails;
+      }
+    } catch (error) {
+      return null;
+    }
+  }
+
+  getPersonDetails(int id) async {
+    Map<dynamic, dynamic> tempMap = {};
+    PersonDetails personDetails = initialPersonDetails;
+    try {
+      tempMap = await tmdb.v3.people.getDetails(id, appendToResponse: "images");
+      if(!tempMap.containsKey("errors") && 
+        !tempMap[movieDetailsImages].containsKey("errors")) {
+        personDetails = Utilities.mapPersonDetails(tempMap);
+        return personDetails;
+      }
     } catch (error) {
       return null;
     }

@@ -14,7 +14,6 @@ class Movie {
   num popularity;
   num voteCount;
   String mediaType = "movie";
-  // List<Provider> providers;
 
   Movie(
     this.id, 

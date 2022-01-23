@@ -1,6 +1,8 @@
 import 'package:movies/models/interfaces/Movie.dart';
 import 'package:movies/models/interfaces/MovieDetails.dart';
 import 'package:movies/models/interfaces/Person.dart';
+import 'package:movies/models/interfaces/PersonDetails.dart';
+import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 
 const String bearerV4Token =
@@ -50,6 +52,34 @@ const String personDepartment = "known_for_department";
 const String personPopularity = "popularity";
 const String personProfilePath = "profile_path";
 
+// Movie details internal names
+const String movieDetailsHomepage = "homepage";
+const String movieDetailsRuntime = "runtime";
+const String movieDetailsBackdrops = "backdrops";
+const String movieGenres = "genres";
+const String movieDetailsFilePath = "file_path";
+const String movieDetailsTrailer = "videos";
+const String movieDetailsSimilars = "similar";
+const String movieDetailsImages = "images";
+const String movieDetailsWatchProviders = "watch/providers";
+
+// Provider internal names
+const String itLanguage = "IT";
+const String streaming = "streaming";
+const String providerName = "provider_name";
+const String providerLogo = "logo_path";
+
+// Person details internal names
+const String personBirthday = "birthday";
+const String personDeathday = "deathday";
+const String personAlsoKnownAs = "also_known_as";
+const String personBiography = "biography";
+const String personPlaceOfBirth = "place_of_birth";
+
+// Person details internal names
+const String serieSeasons = "number_of_seasons";
+const String serieEpisodes = "number_of_episodes";
+
 // Initial state Movie
 Movie initialMovie = Movie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 
@@ -59,7 +89,14 @@ TVSerie initialSerie = TVSerie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 // Initial state person
 Person initialPerson = Person(0, "", "", [], 0, "");
 
-MovieDetails initialMovieDetails = MovieDetails(0, "");
+MovieDetails initialMovieDetails = MovieDetails(
+    0, "", "", [], [], [], 0, "", "", "", "", 0, "", "", "", [], 0, 0, "movie");
+
+SerieDetails initialSerieDetails = SerieDetails(0, 0, "", "", [], [], [], 0, "",
+    "", "", "", 0, "", "", "", [], 0, 0, "serie");
+
+PersonDetails initialPersonDetails =
+    PersonDetails("", [], "", "", "", "", "", 0, "", "", [], 0, "", "person");
 
 // Genre ids in a map to be easier to access in
 Map genreIds = {
