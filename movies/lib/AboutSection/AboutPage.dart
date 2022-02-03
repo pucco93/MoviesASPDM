@@ -11,8 +11,10 @@ class AboutPage extends StatelessWidget {
     }
 
     void _openLink() async {
-  if (!await launch("https://github.com/pucco93/moviesASPDM/")) throw 'Could not launch https://github.com/pucco93/moviesASPDM/';
-}
+      if (!await launch("https://github.com/pucco93/moviesASPDM/")) {
+        throw 'Could not launch https://github.com/pucco93/moviesASPDM/';
+      }
+    }
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -34,32 +36,37 @@ class AboutPage extends StatelessWidget {
                           "This app is made with APIs coming from TMDb.com.",
                           style: TextStyle(fontSize: 20)))),
               Align(
-                alignment: Alignment.center,
-                child: Container(
-                    padding: const EdgeInsets.only(top: 20),
-                    height: 150,
-                    width: 150,
-                    child: const FittedBox(
-                      child: Image(image: AssetImage("assets/images/tmdb.png")),
-                      fit: BoxFit.cover,
-                    ))),
-                          const Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      padding: const EdgeInsets.only(top: 20),
+                      height: 150,
+                      width: 150,
+                      child: const FittedBox(
+                        child:
+                            Image(image: AssetImage("assets/images/tmdb.png")),
+                        fit: BoxFit.cover,
+                      ))),
+              const Align(
                   alignment: Alignment.center,
                   child: Padding(
                       padding: EdgeInsets.only(top: 50),
                       child: Text(
                           "The icon below is a link to the source code in GitHub.",
-                          style: TextStyle(fontSize: 20)))), Align(
+                          style: TextStyle(fontSize: 20)))),
+              Align(
                   alignment: Alignment.center,
                   child: Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: InkWell(child: const Image(image: AssetImage("assets/images/github_logo.png")), onTap: _openLink))),
+                      child: InkWell(
+                          child: const Image(
+                              image:
+                                  AssetImage("assets/images/github_logo.png")),
+                          onTap: _openLink))),
               const Align(
                   alignment: Alignment.center,
                   child: Padding(
                       padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                          "App version: 1.0.0",
+                      child: Text("App version: 1.0.0",
                           style: TextStyle(fontSize: 20)))),
             ])));
   }

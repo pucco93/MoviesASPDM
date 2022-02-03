@@ -108,8 +108,8 @@ class GridViewCard extends StatelessWidget {
                                   child: Text(
                                       item.mediaType == "tv" ||
                                               item.mediaType == "person"
-                                          ? item.name
-                                          : item.title,
+                                          ? item.name != "" ? item.name : ""
+                                          : item.title != "" ? item.title : "",
                                       style: const TextStyle(fontSize: 16))))),
                     ], fit: StackFit.loose),
                   ))));

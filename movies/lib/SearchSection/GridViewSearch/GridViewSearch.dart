@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:movies/models/providers/ProviderSearch.dart';
 import 'package:provider/provider.dart';

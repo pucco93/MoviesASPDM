@@ -1,17 +1,23 @@
-import 'dart:ui';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/AboutSection/AboutPage.dart';
 import 'package:movies/Colors/Colors.dart';
 import 'package:movies/EasterEggs/TermsPolicy.dart';
-import 'package:movies/HomeSection/HomePage.dart';
-import 'package:movies/ProfileSection/ProfilePage.dart';
 import 'package:movies/models/providers/ProviderHome.dart';
 import 'package:provider/provider.dart';
 
 class NavDrawer extends StatelessWidget {
-  const NavDrawer({Key? key, required this.closeDrawer}) : super(key: key);
+  NavDrawer({Key? key, required this.closeDrawer}) : super(key: key);
   final closeDrawer;
+
+  final ButtonStyle _buttonStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white),
+      primary: ColorSelect.customMagenta,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ));
+
+  final ButtonStyle _textButton = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white));
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +51,9 @@ class NavDrawer extends StatelessWidget {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: ColorSelect.customBlue,
+            titleTextStyle: const TextStyle(color: Colors.white),
+            contentTextStyle: const TextStyle(color: Colors.white),
             title: const Text('Privacy Policy'),
             content: SingleChildScrollView(
               child: ListBody(
@@ -59,6 +68,7 @@ class NavDrawer extends StatelessWidget {
             actions: <Widget>[
               ElevatedButton(
                 child: const Text('Read'),
+                style: _buttonStyle,
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -68,6 +78,7 @@ class NavDrawer extends StatelessWidget {
               ),
               TextButton(
                 child: const Text('Close'),
+                style: _textButton,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

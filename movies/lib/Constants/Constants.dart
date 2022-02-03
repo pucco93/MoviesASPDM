@@ -4,6 +4,7 @@ import 'package:movies/models/interfaces/Person.dart';
 import 'package:movies/models/interfaces/PersonDetails.dart';
 import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
+import 'package:movies/models/typeAdapters/Movie.dart';
 
 const String bearerV4Token =
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NWUzNjdiYmQ4NDM0Y2ExYzJhNzNkNmM0ZmMyNDAyMiIsInN1YiI6IjYxZDlkMWRhNTVjOTI2MDAxYzJiOTMxYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UQeGEMcj1gHdP9f-4Q0Mx0QMK1iJLWXqo5BlOdfLzwQ";
@@ -75,6 +76,7 @@ const String personDeathday = "deathday";
 const String personAlsoKnownAs = "also_known_as";
 const String personBiography = "biography";
 const String personPlaceOfBirth = "place_of_birth";
+const String personProfiles = "profiles";
 
 // Person details internal names
 const String serieSeasons = "number_of_seasons";
@@ -82,6 +84,9 @@ const String serieEpisodes = "number_of_episodes";
 
 // Initial state Movie
 Movie initialMovie = Movie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
+
+// Initial state MovieHive
+MovieHive initialMovieHive = MovieHive(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 
 // Initial state TVSerie
 TVSerie initialSerie = TVSerie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
@@ -96,7 +101,7 @@ SerieDetails initialSerieDetails = SerieDetails(0, 0, "", "", [], [], [], 0, "",
     "", "", "", 0, "", "", "", [], 0, 0, "serie");
 
 PersonDetails initialPersonDetails =
-    PersonDetails("", [], "", "", "", "", "", 0, "", "", [], 0, "", "person");
+    PersonDetails("", [], "", "", "", "", 0, "", "", [], 0, "", "person");
 
 // Genre ids in a map to be easier to access in
 Map genreIds = {

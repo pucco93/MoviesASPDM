@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movies/AboutSection/AboutPage.dart';
-import 'package:movies/Colors/Colors.dart';
 
 import 'package:movies/SideDrawer/SideDrawer.dart';
 import 'package:movies/BottomNav/BottomNav.dart';

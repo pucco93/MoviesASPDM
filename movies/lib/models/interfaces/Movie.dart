@@ -1,5 +1,3 @@
-import 'package:movies/models/interfaces/Provider.dart';
-
 class Movie {
   int id;
   String title;

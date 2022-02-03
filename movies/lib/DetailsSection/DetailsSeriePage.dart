@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hive/hive.dart';
 import 'package:movies/AppBar/AppBar.dart';
 import 'package:movies/Colors/Colors.dart';
 import 'package:movies/Constants/Constants.dart';
-import 'package:movies/DetailsSection/DetailsMoviePage.dart';
-import 'package:movies/DetailsSection/DetailsPersonPage.dart';
 import 'package:movies/SearchSection/GridViewSearch/GridViewCard/GridViewCard.dart';
+import 'package:movies/Utilities/Utilities.dart';
 import 'package:movies/data_manager/DataManager.dart';
 import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:provider/provider.dart';
@@ -26,12 +26,13 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
   DataManager dataManager = DataManager();
   dynamic get _item => widget.item;
   SerieDetails _serieDetails = initialSerieDetails;
+  bool isFavourite = false;
 
-  final ButtonStyle homepageStyle = ElevatedButton.styleFrom(
+  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
-      primary: Colors.redAccent,
+      primary: ColorSelect.customBlue,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
 
   void _getDetails() async {
@@ -39,6 +40,16 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
     if (mounted) {
       setState(() {
         _serieDetails = newSerieDetails;
+      });
+    }
+    final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
+    List<dynamic> newList = [];
+    if (_favBox.get("favourites") ?? true) {
+      newList = Utilities.fromHiveToDataGenericItem(_favBox.get("favourites"));
+    }
+    if (newList.indexWhere((element) => element.id == _item.id) >= 0) {
+      setState(() {
+        isFavourite = true;
       });
     }
   }
@@ -52,16 +63,36 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
   }
 
   void _openHomepage() async {
-    if (!await launch(_serieDetails.homepage))
+    if (!await launch(
+        _serieDetails.homepage != "" ? _serieDetails.homepage : "")) {
       throw 'Could not launch ${_serieDetails.homepage}';
+    }
   }
 
   void _launchTrailer() async {
-    // if (!await launch('$youtubePath${movieDetails.}')) throw 'Could not launch $youtubePath${movieDetails.}';
+    if (!await launch('$youtubePath${_serieDetails.trailer}')) {
+      throw 'Could not launch $youtubePath${_serieDetails.trailer}';
+    }
   }
 
-  void _addToFavourites() {
-
+  void _manageFavourites() async {
+    final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
+    List<dynamic> tempList = [];
+    if (_favBox.get("favourites") ?? true) {
+      tempList = _favBox.get("favourites");
+      if (tempList.any((element) => element.id == _item.id)) {
+        tempList.removeWhere((element) => element.id == _item.id);
+        setState(() {
+          isFavourite = false;
+        });
+      } else {
+        tempList = [...tempList, Utilities.fromDataToHiveSerie(_item)];
+        setState(() {
+          isFavourite = true;
+        });
+      }
+    }
+    await _favBox.put("favourites", tempList);
   }
 
   void _navigateBack() {
@@ -69,6 +100,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
       Navigator.pop(context);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ProviderFavs>(builder: (context, favProvider, child) {
@@ -101,14 +133,20 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                   alignment: Alignment.center,
                                   children: [
                                     FittedBox(
-                                        child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/images/placeholder_movie.png',
-                                            image:
-                                                '$basePathImages${_item.backdropPath}',
-                                                imageErrorBuilder: (context, error, stackTrace) => 
-                                                  const Image(image: AssetImage('assets/images/placeholder_movie.png'))
-                                                ),
+                                        child: _item.backdropPath != ""
+                                            ? FadeInImage.assetNetwork(
+                                                placeholder:
+                                                    'assets/images/placeholder_movie.png',
+                                                image:
+                                                    '$basePathImages${_item.backdropPath}')
+                                            : Container(
+                                                height: 240,
+                                                child: const FittedBox(
+                                                    child: Image(
+                                                  image: AssetImage(
+                                                      "assets/images/placeholder_movie.png"),
+                                                  fit: BoxFit.cover,
+                                                ))),
                                         fit: BoxFit.cover),
                                     Container(
                                         height: 240,
@@ -136,7 +174,8 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                         )),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(_serieDetails.name,
+                      child: Text(
+                          _serieDetails.name != "" ? _serieDetails.name : "",
                           style: const TextStyle(
                               fontSize: 28, color: Colors.white70)),
                     ),
@@ -150,12 +189,22 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                 ClipRRect(
                                     borderRadius: BorderRadius.circular(10.0),
                                     child: Container(
-                                        height: 170,
-                                        child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/images/movie_poster_placeholder.jpeg',
-                                            image:
-                                                '$basePathImages${_item.posterPath}'))),
+                                      height: 170,
+                                      child: _item.posterPath != ""
+                                          ? FadeInImage.assetNetwork(
+                                              placeholder:
+                                                  'assets/images/movie_poster_placeholder.jpeg',
+                                              image:
+                                                  '$basePathImages${_item.posterPath}')
+                                          : Container(
+                                              height: 170,
+                                              child: const FittedBox(
+                                                  child: Image(
+                                                image: AssetImage(
+                                                    "assets/images/movie_poster_placeholder.jpeg"),
+                                                fit: BoxFit.cover,
+                                              ))),
+                                    )),
                                 Transform.translate(
                                     offset: const Offset(5, 10),
                                     child: ClipOval(
@@ -180,21 +229,25 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                           child: Column(children: [
                         Center(
                             child: Column(children: [
-                          Text("Seasons: ${_serieDetails.seasons}", style: const TextStyle(fontSize: 16)),
-                          Text("Episodes: ${_serieDetails.seasons}", style: const TextStyle(fontSize: 16)),
+                          Text("Seasons: ${_serieDetails.seasons}",
+                              style: const TextStyle(fontSize: 16)),
+                          Text("Episodes: ${_serieDetails.seasons}",
+                              style: const TextStyle(fontSize: 16)),
                           Padding(
                               padding:
                                   const EdgeInsets.only(top: 5, bottom: 10),
                               child: ElevatedButton(
                                   onPressed: _openHomepage,
-                                  style: homepageStyle,
+                                  style: buttonStyle,
                                   child: const Text("Open site"))),
                           Padding(
                               padding: const EdgeInsets.only(bottom: 5),
                               child: ElevatedButton(
-                                  onPressed: _addToFavourites,
-                                  style: homepageStyle,
-                                  child: const Text("Add to favourites")))
+                                  onPressed: _manageFavourites,
+                                  style: buttonStyle,
+                                  child: isFavourite
+                                      ? const Text("Remove from favourites")
+                                      : const Text("Add to favourites")))
                         ])),
                         Row(children: [
                           _serieDetails.watchProviders.isNotEmpty
@@ -203,7 +256,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                       top: 15, bottom: 15),
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2),
+                                          crossAxisCount: 3),
                                   shrinkWrap: true,
                                   physics: const ScrollPhysics(),
                                   itemCount:
@@ -216,10 +269,15 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                             height: 60,
                                             width: 60,
                                             color: Colors.white,
-                                            child: FadeInImage.assetNetwork(
-                                                placeholder: '',
-                                                image:
-                                                    '$basePathImages${_serieDetails.watchProviders[index].logoPath}')));
+                                            child: _serieDetails
+                                                        .watchProviders[index]
+                                                        .logoPath !=
+                                                    ""
+                                                ? FadeInImage.assetNetwork(
+                                                    placeholder: '',
+                                                    image:
+                                                        '$basePathImages${_serieDetails.watchProviders[index].logoPath}')
+                                                : Container()));
                                   })
                               : Container()
                         ])
@@ -233,9 +291,11 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                 color: ColorSelect.customBlue,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 10),
-                                child: Text(_serieDetails.description,
-                                    style: const TextStyle(
-                                        fontSize: 16, height: 1.3))))),
+                                child: _serieDetails.description != ""
+                                    ? Text(_serieDetails.description,
+                                        style: const TextStyle(
+                                            fontSize: 16, height: 1.4))
+                                    : Container(width: 0, height: 0)))),
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     _serieDetails.gallery.isNotEmpty
                         ? const Text("Gallery",
@@ -257,11 +317,21 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                   child: Container(
                                       height: 60,
                                       width: 110,
-                                      child: FadeInImage.assetNetwork(
-                                          placeholder:
-                                              'assets/images/placeholder_movie.png',
-                                          image:
-                                              '$basePathImages${_serieDetails.gallery[index]}'))));
+                                      child: _serieDetails.gallery[index] != ""
+                                          ? FadeInImage.assetNetwork(
+                                              placeholder:
+                                                  'assets/images/placeholder_movie.png',
+                                              image:
+                                                  '$basePathImages${_serieDetails.gallery[index]}')
+                                          : Container(
+                                              height: 60,
+                                              width: 110,
+                                              child: const FittedBox(
+                                                  child: Image(
+                                                image: AssetImage(
+                                                    "assets/images/placeholder_movie.png"),
+                                                fit: BoxFit.cover,
+                                              ))))));
                             })
                         : Container(),
                     _serieDetails.similars.isNotEmpty
@@ -280,7 +350,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                             itemCount: _serieDetails.similars.length,
                             itemBuilder: (context, index) {
                               return GridViewCard(
-                                      item: _serieDetails.similars[index]);
+                                  item: _serieDetails.similars[index]);
                             })
                         : Container(),
                   ]))));

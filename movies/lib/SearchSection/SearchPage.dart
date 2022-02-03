@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:movies/Colors/Colors.dart';
+import 'package:movies/Utilities/Utilities.dart';
 import 'package:movies/data_manager/DataManager.dart';
 import 'package:movies/models/providers/ProviderSearch.dart';
 import 'package:provider/provider.dart';
@@ -27,9 +29,20 @@ class _SearchPageState extends State<SearchPage> {
     searchProvider.updateSearchText(_searchController.text);
   }
 
-  _discoverItems(ProviderSearch searchProvider) async {
-    List<dynamic> newDiscoverItems =
-        await dataManager.getDiscover(searchProvider.dropdownValue);
+  _discoverItems(ProviderSearch searchProvider, bool forceRefresh) async {
+    final Box<dynamic> _dataBox = Hive.box<dynamic>("dataBox");
+    List<dynamic> newDiscoverItems = [];
+    if (_dataBox.get("discover") ?? true) {
+      newDiscoverItems =
+          Utilities.fromHiveToDataGenericItem(_dataBox.get("discover"));
+    } else {
+      newDiscoverItems =
+          await dataManager.getDiscover(searchProvider.dropdownValue);
+      String timestamp = DateTime.now().toIso8601String();
+      await _dataBox.put("last_timestamp", timestamp);
+      await _dataBox.put(
+          "discover", Utilities.fromDataToHiveGenericItem(newDiscoverItems));
+    }
     searchProvider.updateSearchedItems(newDiscoverItems);
     searchProvider.updateIsSearch(false);
     searchProvider.updateLoader(false);
@@ -51,11 +64,18 @@ class _SearchPageState extends State<SearchPage> {
     searchProvider.updateLoader(false);
   }
 
+  Future<void> _pullRefresh(ProviderSearch searchProvider) async {
+    _discoverItems(searchProvider, true);
+  }
+
   @override
   void initState() {
     ProviderSearch searchProvider =
         Provider.of<ProviderSearch>(context, listen: false);
-    _discoverItems(searchProvider);
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _discoverItems(searchProvider, false);
+    });
     super.initState();
   }
 
@@ -87,7 +107,7 @@ class _SearchPageState extends State<SearchPage> {
               controller: _searchController,
               onChanged: (text) {
                 if (text == "") {
-                  _discoverItems(searchProvider);
+                  _discoverItems(searchProvider, false);
                 } else {
                   updateSearchText(searchProvider);
                 }
@@ -133,7 +153,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: ColorSelect.customBlue, fontSize: 18),
                   onChanged: (String? newValue) {
                     searchProvider.updateDropdownValue(newValue!);
-                    _discoverItems(searchProvider);
+                    _discoverItems(searchProvider, false);
                     _searchController.text = "";
                   },
                   items: <String>['Movie', 'TV serie']
@@ -151,7 +171,9 @@ class _SearchPageState extends State<SearchPage> {
                     padding: EdgeInsets.only(top: 15, left: 15),
                     child: Text("Results", style: TextStyle(fontSize: 20))))
             : Container(),
-        const GridViewSearch()
+        RefreshIndicator(
+            onRefresh: () => _pullRefresh(searchProvider),
+            child: const GridViewSearch())
       ]));
     });
   }

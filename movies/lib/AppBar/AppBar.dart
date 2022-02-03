@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies/Colors/Colors.dart';
+import 'package:movies/models/providers/ProviderAccount.dart';
 import 'package:movies/models/providers/ProviderHome.dart';
 import 'package:provider/provider.dart';
 
@@ -17,34 +18,40 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     }
 
     return Consumer<ProviderHome>(builder: (context, homeProvider, child) {
-      return AppBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20),
-          ),
-        ),
-        backgroundColor: ColorSelect.customBlue,
-        leading: IconButton(
-            icon: const Icon(
-              Icons.account_circle_outlined,
-              size: 30,
+      return Consumer<ProviderAccount>(
+          builder: (context, accountProvider, child) {
+        return AppBar(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
             ),
-            onPressed: () => _openProfile(homeProvider)),
-        title: Center(
-            child: RichText(
-                text: const TextSpan(children: [
-          TextSpan(
-              text: "Hi",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-          TextSpan(text: ", Ale", style: TextStyle(fontSize: 22))
-        ]))),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.menu_rounded, size: 30),
-              onPressed: () => _openDrawer(homeProvider)),
-          const Padding(padding: EdgeInsets.only(right: 15)),
-        ],
-      );
+          ),
+          backgroundColor: ColorSelect.customBlue,
+          leading: IconButton(
+              icon: const Icon(
+                Icons.account_circle_outlined,
+                size: 30,
+              ),
+              onPressed: () => _openProfile(homeProvider)),
+          title: Center(
+              child: RichText(
+                  text: TextSpan(children: [
+            const TextSpan(
+                text: "Hi",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+            TextSpan(
+                text:
+                    ", ${accountProvider.name == '' ? 'user' : accountProvider.name}",
+                style: const TextStyle(fontSize: 22))
+          ]))),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.menu_rounded, size: 30),
+                onPressed: () => _openDrawer(homeProvider)),
+            const Padding(padding: EdgeInsets.only(right: 15)),
+          ],
+        );
+      });
     });
   }
 

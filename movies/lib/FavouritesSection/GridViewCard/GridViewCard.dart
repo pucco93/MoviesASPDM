@@ -56,7 +56,7 @@ class GridViewCard extends StatelessWidget {
           child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: InkWell(
-                  onTap: () => _openItem,
+                  onTap: () => _openItem(context, item),
                   child: Container(
                     alignment: Alignment.center,
                     width: 200,
@@ -108,8 +108,8 @@ class GridViewCard extends StatelessWidget {
                                   child: Text(
                                       item.mediaType == "tv" ||
                                               item.mediaType == "person"
-                                          ? item.name
-                                          : item.title,
+                                          ? item.name != "" ? item.name : ""
+                                          : item.title != "" ? item.title : "",
                                       style: const TextStyle(fontSize: 16))))),
                     ], fit: StackFit.loose),
                   ))));

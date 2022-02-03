@@ -3,14 +3,13 @@ import 'package:flutter/scheduler.dart';
 import 'package:movies/AppBar/AppBar.dart';
 import 'package:movies/Colors/Colors.dart';
 import 'package:movies/Constants/Constants.dart';
-import 'package:movies/DetailsSection/DetailsMoviePage.dart';
-import 'package:movies/DetailsSection/DetailsSeriePage.dart';
+import 'package:movies/SearchSection/GridViewSearch/GridViewCard/GridViewCard.dart';
 import 'package:movies/data_manager/DataManager.dart';
 import 'package:movies/models/interfaces/PersonDetails.dart';
 import 'package:movies/models/providers/ProviderFavs.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class DetailsPersonPage extends StatefulWidget {
   const DetailsPersonPage({Key? key, required this.item}) : super(key: key);
@@ -26,11 +25,11 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
   dynamic get _item => widget.item;
   PersonDetails _personDetails = initialPersonDetails;
 
-  final ButtonStyle homepageStyle = ElevatedButton.styleFrom(
+  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
-      primary: Colors.redAccent,
+      primary: ColorSelect.customBlue,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
 
   void _getDetails() async {
@@ -52,8 +51,10 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
   }
 
   void _openHomepage() async {
-    if (!await launch(_personDetails.homepage))
+    if (!await launch(
+        _personDetails.homepage != "" ? _personDetails.homepage : "")) {
       throw 'Could not launch ${_personDetails.homepage}';
+    }
   }
 
   void _launchTrailer() async {
@@ -87,116 +88,60 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Column(children: [
-                    const Padding(padding: EdgeInsets.only(top: 75)),
-                    InkWell(
-                        onTap: _launchTrailer,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Container(
-                              height: 240,
-                              child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    FittedBox(
-                                        child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/images/placeholder_movie.png',
-                                            image:
-                                                '$basePathImages${_item.backdropPath}'),
-                                        fit: BoxFit.cover),
-                                    Container(
-                                        height: 240,
-                                        decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            gradient: RadialGradient(
-                                                center: Alignment.center,
-                                                radius: 1.0,
-                                                colors: [
-                                                  Colors.black54,
-                                                  Colors.grey.withOpacity(0.0),
-                                                ],
-                                                stops: const [
-                                                  0.0,
-                                                  1.0,
-                                                ]))),
-                                    Container(
-                                        alignment: Alignment.center,
-                                        child: const Icon(
-                                            Icons.play_arrow_outlined,
-                                            size: 120,
-                                            color: Colors.white70))
-                                  ],
-                                  fit: StackFit.expand)),
-                        )),
+                    const Padding(padding: EdgeInsets.only(top: 55)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(_personDetails.name,
+                      child: Text(
+                          _personDetails.name != "" ? _personDetails.name : "",
                           style: const TextStyle(
                               fontSize: 28, color: Colors.white70)),
                     ),
                     Row(children: [
-                      // Padding(
-                      //     padding: const EdgeInsets.only(right: 5),
-                      // child: Stack(
-                      //   alignment: Alignment.bottomRight,
-                      //   children: [
-                      //   ClipRRect(
-                      //       borderRadius: BorderRadius.circular(10.0),
-                      //       child: Container(
-                      //           height: 170,
-                      //           child: FadeInImage.assetNetwork(
-                      //               placeholder:
-                      //                   'assets/images/movie_poster_placeholder.jpeg',
-                      //               image:
-                      //                   '$basePathImages${_item.posterPath}'))),
-                      //   Container(
-                      //       child: ClipOval(
-                      //         child: CircularPercentIndicator(
-                      //           radius: 30,
-                      //           lineWidth: 6,
-                      //           backgroundColor: Colors.white,
-                      //           fillColor: Colors.grey.withOpacity(0.8),
-                      //           progressColor: ColorSelect.customBlue,
-                      //           percent: _personDetails.voteAverage.ceilToDouble() / 10,
-                      //           center: Text(_personDetails.voteAverage.toString(), style: const TextStyle(color: ColorSelect.customBlue, fontSize: 18, fontWeight: FontWeight.w600)),
-                      //       ))),
-                      // ])),
+                      Padding(
+                          padding: const EdgeInsets.only(right: 5, bottom: 30),
+                          child: Stack(
+                              alignment: Alignment.bottomRight,
+                              clipBehavior: Clip.none,
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Container(
+                                        height: 170,
+                                        child: _item.posterPath != ""
+                                            ? FadeInImage.assetNetwork(
+                                                placeholder:
+                                                    'assets/images/movie_poster_placeholder.jpeg',
+                                                image:
+                                                    '$basePathImages${_item.posterPath}')
+                                            : Container(
+                                                height: 170,
+                                                child: const FittedBox(
+                                                    child: Image(
+                                                  image: AssetImage(
+                                                      "assets/images/movie_poster_placeholder.jpeg"),
+                                                  fit: BoxFit.cover,
+                                                ))))),
+                              ])),
                       Expanded(
                           child: Column(children: [
                         Center(
                             child: Column(children: [
-                          // Text("Length: ${_personDetails.runtime} minutes"),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: ElevatedButton(
-                                  onPressed: _openHomepage,
-                                  style: homepageStyle,
-                                  child: const Text("Open site"))),
+                          Text(
+                              "Born: ${_personDetails.birthday}${_personDetails.deathday != "" ? ' - death:' + _personDetails.deathday : ''}",
+                              style: const TextStyle(fontSize: 16)),
+                          _personDetails.homepage != ""
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: ElevatedButton(
+                                      onPressed: _openHomepage,
+                                      style: buttonStyle,
+                                      child: const Text("Open site")))
+                              : Container(
+                                  width: 0,
+                                  height: 0,
+                                )
                         ])),
-                        // Row(children: [
-                        //   _personDetails.watchProviders.isNotEmpty ? GridView.builder(
-                        //       padding:
-                        //           const EdgeInsets.only(top: 15, bottom: 15),
-                        //       gridDelegate:
-                        //           const SliverGridDelegateWithFixedCrossAxisCount(
-                        //               crossAxisCount: 2),
-                        //       shrinkWrap: true,
-                        //       physics: const ScrollPhysics(),
-                        //       itemCount: _personDetails.watchProviders.length,
-                        //       itemBuilder: (context, index) {
-                        //         return ClipRRect(
-                        //                 borderRadius:
-                        //                     BorderRadius.circular(10.0),
-                        //                 child: Container(
-                        //                     height: 60,
-                        //                     width: 60,
-                        //                     color: Colors.white,
-                        //                     child: FadeInImage.assetNetwork(
-                        //                         placeholder: '',
-                        //                         image:
-                        //                             '$basePathImages${_personDetails.watchProviders[index].logoPath}')));
-                        //       }): Container()
-                        // ])
                       ]))
                     ]),
                     Padding(
@@ -207,55 +152,76 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                                 color: ColorSelect.customBlue,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 10),
-                        child: Text(_personDetails.biography,
-                            style: const TextStyle(fontSize: 16, height: 1.3))))),
+                                child: Text(
+                                    _personDetails.biography != ""
+                                        ? _personDetails.biography
+                                        : "",
+                                    style: const TextStyle(
+                                        fontSize: 16, height: 1.4))))),
                     const Padding(padding: EdgeInsets.only(top: 20)),
-                    // _personDetails.gallery.isNotEmpty
-                    //     ? const Text("Gallery",
-                    //         style: TextStyle(
-                    //             fontSize: 18, fontWeight: FontWeight.w600))
-                    //     : Container(),
-                    // _personDetails.gallery.isNotEmpty
-                    //     ? GridView.builder(
-                    //         padding: const EdgeInsets.only(top: 15, bottom: 20),
-                    //         gridDelegate:
-                    //             const SliverGridDelegateWithFixedCrossAxisCount(
-                    //                 crossAxisCount: 2),
-                    //         shrinkWrap: true,
-                    //         physics: const ScrollPhysics(),
-                    //         itemCount: _personDetails.gallery.length,
-                    //         itemBuilder: (context, index) {
-                    //           return (ClipRRect(
-                    //               borderRadius: BorderRadius.circular(10.0),
-                    //               child: Container(
-                    //                   height: 60,
-                    //                   width: 110,
-                    //                   child: FadeInImage.assetNetwork(
-                    //                       placeholder:
-                    //                           'assets/images/placeholder_movie.png',
-                    //                       image:
-                    //                           '$basePathImages${_personDetails.gallery[index]}'))));
-                    //         })
-                    //     : Container(),
-                    // _personDetails.similars.isNotEmpty
-                    //     ? const Text("Suggested",
-                    //         style: TextStyle(
-                    //             fontSize: 20, fontWeight: FontWeight.w600))
-                    //     : Container(),
-                    // _personDetails.similars.isNotEmpty
-                    //     ? GridView.builder(
-                    //         padding: const EdgeInsets.only(top: 15, bottom: 20),
-                    //         gridDelegate:
-                    //             const SliverGridDelegateWithFixedCrossAxisCount(
-                    //                 crossAxisCount: 2),
-                    //         shrinkWrap: true,
-                    //         physics: const ScrollPhysics(),
-                    //         itemCount: _personDetails.similars.length,
-                    //         itemBuilder: (context, index) {
-                    //           return GridViewCard(
-                    //               item: _personDetails.similars[index]);
-                    //         })
-                    //     : Container(),
+                    _personDetails.gallery.isNotEmpty
+                        ? const Text("Gallery",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600))
+                        : Container(),
+                    _personDetails.gallery.isNotEmpty
+                        ? GridView.builder(
+                            padding: const EdgeInsets.only(top: 15, bottom: 20),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemCount: _personDetails.gallery.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Container(
+                                          height: 160,
+                                          width: 90,
+                                          child: _personDetails
+                                                      .gallery[index] !=
+                                                  ""
+                                              ? FadeInImage.assetNetwork(
+                                                  height: 160,
+                                                  width: 90,
+                                                  placeholder:
+                                                      'assets/images/placeholder_movie.png',
+                                                  image:
+                                                      '$basePathImages${_personDetails.gallery[index]}',
+                                                  fit: BoxFit.cover)
+                                              : Container(
+                                                  height: 160,
+                                                  width: 90,
+                                                  child: const FittedBox(
+                                                      child: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/placeholder_movie.png"),
+                                                    fit: BoxFit.cover,
+                                                  ))))));
+                            })
+                        : Container(),
+                    _item.knownFor.isNotEmpty
+                        ? const Text("Appears in",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600))
+                        : Container(),
+                    _item.knownFor.isNotEmpty
+                        ? GridView.builder(
+                            padding: const EdgeInsets.only(top: 15, bottom: 20),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemCount: _item.knownFor.length,
+                            itemBuilder: (context, index) {
+                              return GridViewCard(item: _item.knownFor[index]);
+                            })
+                        : Container(),
                   ]))));
     });
   }

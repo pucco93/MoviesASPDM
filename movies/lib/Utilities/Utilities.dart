@@ -6,6 +6,9 @@ import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:movies/Constants/Constants.dart';
 import 'package:movies/models/interfaces/Person.dart';
+import 'package:movies/models/typeAdapters/Movie.dart';
+import 'package:movies/models/typeAdapters/Person.dart';
+import 'package:movies/models/typeAdapters/TVSerie.dart';
 
 class Utilities {
   static Movie mapMovie(dynamic item) {
@@ -189,11 +192,16 @@ class Utilities {
       unmapped[movieDetailsImages][movieDetailsBackdrops]
           ?.forEach((element) => {gallery.add(element[movieDetailsFilePath])});
     }
+    if (gallery.length > 10) {
+      dynamic tempList = gallery.sublist(0, 10);
+      gallery = tempList;
+    }
     if (unmapped[movieDetailsSimilars] != null &&
         unmapped[movieDetailsSimilars]["results"] != null) {
-      similars = [
+      dynamic tempList = [
         ...Utilities.mapTVSeries(unmapped[movieDetailsSimilars]["results"])
-      ].sublist(0, 10);
+      ];
+      similars = tempList.length > 10 ? tempList.sublist(0, 10) : tempList;
     }
     if (unmapped[movieDetailsWatchProviders] != null &&
         unmapped[movieDetailsWatchProviders]["results"] != null &&
@@ -242,16 +250,19 @@ class Utilities {
   static PersonDetails mapPersonDetails(dynamic unmapped) {
     List<String> gallery = [];
     if (unmapped[movieDetailsImages] != null &&
-        unmapped[movieDetailsImages][movieDetailsBackdrops] != null) {
-      unmapped[movieDetailsImages][movieDetailsBackdrops]
+        unmapped[movieDetailsImages][personProfiles] != null) {
+      unmapped[movieDetailsImages][personProfiles]
           ?.forEach((element) => {gallery.add(element[movieDetailsFilePath])});
+    }
+    if (gallery.length > 10) {
+      dynamic tempList = gallery.sublist(0, 10);
+      gallery = tempList;
     }
     PersonDetails personDetails = PersonDetails(
         unmapped[movieDetailsHomepage] ?? "",
         gallery,
         unmapped[personBirthday] ?? "",
         unmapped[personDeathday] ?? "",
-        unmapped[personAlsoKnownAs] ?? "",
         unmapped[personBiography] ?? "",
         unmapped[personPlaceOfBirth] ?? "",
         unmapped[personId] ?? "",
@@ -263,5 +274,201 @@ class Utilities {
         unmapped[mediaType] ?? "person");
 
     return personDetails;
+  }
+
+  static List<MovieHive> fromDataToHiveMovies(dynamic unmapped) {
+    List<MovieHive> movies = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        movies.add(fromDataToHiveMovie(item));
+      });
+    }
+    return movies;
+  }
+
+  static MovieHive fromDataToHiveMovie(Movie movie) {
+    MovieHive newMovie = MovieHive(
+        movie.id,
+        movie.title,
+        movie.originalTitle,
+        movie.description,
+        movie.releaseDate,
+        movie.voteAverage,
+        movie.backdropPath,
+        movie.posterPath,
+        movie.originalLanguage,
+        movie.genreIds,
+        movie.popularity,
+        movie.voteCount,
+        "movie");
+
+    return newMovie;
+  }
+
+  static TVSerieHive fromDataToHiveSerie(TVSerie item) {
+    TVSerieHive serie = TVSerieHive(
+        item.id,
+        item.name,
+        item.originalName,
+        item.description,
+        item.firstAirDate,
+        item.voteAverage,
+        item.backdropPath,
+        item.posterPath,
+        item.originalLanguage,
+        item.genreIds,
+        item.popularity,
+        item.voteCount,
+        "tv");
+    return serie;
+  }
+
+  static List<TVSerieHive> fromDataToHiveSeries(dynamic unmapped) {
+    List<TVSerieHive> series = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        series.add(fromDataToHiveSerie(item));
+      });
+    }
+    return series;
+  }
+
+  static PersonHive fromDataToHivePerson(Person item) {
+    List<dynamic> genericItems = fromDataToHiveGenericItem(item.knownFor);
+    PersonHive person = PersonHive(
+        item.id,
+        item.name,
+        item.department,
+        genericItems,
+        item.popularity,
+        item.posterPath);
+    return person;
+  }
+
+  static List<PersonHive> fromDataToHivePeople(dynamic unmapped) {
+    List<PersonHive> mapped = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        mapped.add(fromDataToHivePerson(item));
+      });
+    }
+    return mapped;
+  }
+
+  static List<dynamic> fromDataToHiveGenericItem(dynamic unmapped) {
+    List<dynamic> mapped = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        if (item.mediaType == "movie") {
+          MovieHive newMovie = fromDataToHiveMovie(item);
+          mapped.add(newMovie);
+        } else if (item.mediaType == "tv") {
+          TVSerieHive newTVSerie = fromDataToHiveSerie(item);
+          mapped.add(newTVSerie);
+        } else if (item.mediaType == "person") {
+          PersonHive newPerson = fromDataToHivePerson(item);
+          mapped.add(newPerson);
+        }
+      });
+    }
+    return mapped;
+  }
+
+  static List<Movie> fromHiveToDataMovies(dynamic unmapped) {
+    List<Movie> movies = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        movies.add(fromHiveToDataMovie(item));
+      });
+    }
+    return movies;
+  }
+
+  static Movie fromHiveToDataMovie(MovieHive movie) {
+    Movie newMovie = Movie(
+        movie.id,
+        movie.title,
+        movie.originalTitle,
+        movie.description,
+        movie.releaseDate,
+        movie.voteAverage,
+        movie.backdropPath,
+        movie.posterPath,
+        movie.originalLanguage,
+        movie.genreIds,
+        movie.popularity,
+        movie.voteCount,
+        "movie");
+
+    return newMovie;
+  }
+
+  static TVSerie fromHiveToDataSerie(TVSerieHive item) {
+    TVSerie serie = TVSerie(
+        item.id,
+        item.name,
+        item.originalName,
+        item.description,
+        item.firstAirDate,
+        item.voteAverage,
+        item.backdropPath,
+        item.posterPath,
+        item.originalLanguage,
+        item.genreIds,
+        item.popularity,
+        item.voteCount,
+        "tv");
+    return serie;
+  }
+
+  static List<TVSerie> fromHiveToDataSeries(dynamic unmapped) {
+    List<TVSerie> series = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        series.add(fromHiveToDataSerie(item));
+      });
+    }
+    return series;
+  }
+
+  static Person fromHiveToDataPerson(PersonHive item) {
+    List<dynamic> genericItems = fromHiveToDataGenericItem(item.knownFor);
+    Person person = Person(
+        item.id,
+        item.name,
+        item.department,
+        genericItems,
+        item.popularity,
+        item.posterPath);
+    return person;
+  }
+
+  static List<Person> fromHiveToDataPeople(dynamic unmapped) {
+    List<Person> mapped = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        mapped.add(fromHiveToDataPerson(item));
+      });
+    }
+    return mapped;
+  }
+
+  static List<dynamic> fromHiveToDataGenericItem(dynamic unmapped) {
+    List<dynamic> mapped = [];
+    if (unmapped != null && unmapped.isNotEmpty) {
+      unmapped.forEach((item) {
+        if (item.mediaType == "movie") {
+          Movie newMovie = fromHiveToDataMovie(item);
+          mapped.add(newMovie);
+        } else if (item.mediaType == "tv") {
+          TVSerie newTVSerie = fromHiveToDataSerie(item);
+          mapped.add(newTVSerie);
+        } else if (item.mediaType == "person") {
+          Person newPerson = fromHiveToDataPerson(item);
+          mapped.add(newPerson);
+        }
+      });
+    }
+    return mapped;
   }
 }

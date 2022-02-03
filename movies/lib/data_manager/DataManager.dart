@@ -2,18 +2,19 @@ import 'package:movies/models/interfaces/Movie.dart';
 import 'package:movies/models/interfaces/MovieDetails.dart';
 import 'package:movies/models/interfaces/Person.dart';
 import 'package:movies/models/interfaces/PersonDetails.dart';
-import 'package:movies/models/interfaces/Provider.dart';
 import 'package:movies/models/interfaces/SerieDetails.dart';
 import 'package:movies/models/interfaces/TVSerie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:movies/Constants/Constants.dart';
 import 'package:movies/Utilities/Utilities.dart';
+import 'package:hive/hive.dart';
 
+// Here goes methods to retrieve and manage data from APIs
 class DataManager {
   final tmdb = TMDB(
     ApiKeys(v3Token, bearerV4Token),
   );
-  // Here goes methods to retrieve and manage data from APIs
+
   getTrending() async {
     Map<dynamic, dynamic> tempMap = {};
     List<dynamic> newList = [];
@@ -189,21 +190,6 @@ class DataManager {
     }
   }
 
-  getFavs() async {
-    Map<dynamic, dynamic> tempMap = {};
-    List<dynamic> newList = [];
-    try {
-      tempMap = {};
-      if (!tempMap.containsKey("errors")) {
-        newList = Utilities.mapGenericItem(tempMap["results"]);
-        return newList;
-      }
-      return [];
-    } catch (error) {
-      return [];
-    }
-  }
-
   getMovieDetails(int itemId) async {
     Map<dynamic, dynamic> tempMap = {};
     MovieDetails movieDetails = initialMovieDetails;
@@ -229,8 +215,9 @@ class DataManager {
     Map<dynamic, dynamic> tempMap = {};
     SerieDetails serieDetails = initialSerieDetails;
     try {
-      tempMap = await tmdb.v3.tv.getDetails(id, appendToResponse: "videos,images,watch/providers,similar");
-      if(!tempMap.containsKey("errors") &&
+      tempMap = await tmdb.v3.tv.getDetails(id,
+          appendToResponse: "videos,images,watch/providers,similar");
+      if (!tempMap.containsKey("errors") &&
           !tempMap[movieDetailsTrailer].containsKey("errors") &&
           !tempMap[movieDetailsSimilars].containsKey("errors") &&
           !tempMap[movieDetailsImages].containsKey("errors") &&
@@ -248,8 +235,8 @@ class DataManager {
     PersonDetails personDetails = initialPersonDetails;
     try {
       tempMap = await tmdb.v3.people.getDetails(id, appendToResponse: "images");
-      if(!tempMap.containsKey("errors") && 
-        !tempMap[movieDetailsImages].containsKey("errors")) {
+      if (!tempMap.containsKey("errors") &&
+          !tempMap[movieDetailsImages].containsKey("errors")) {
         personDetails = Utilities.mapPersonDetails(tempMap);
         return personDetails;
       }
@@ -257,4 +244,23 @@ class DataManager {
       return null;
     }
   }
+
+  getFavs() async {
+    Map<dynamic, dynamic> tempMap = {};
+    List<dynamic> newList = [];
+    try {
+      tempMap = {};
+      if (!tempMap.containsKey("errors")) {
+        newList = Utilities.mapGenericItem(tempMap["results"]);
+        return newList;
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  addFav() {}
+
+  deleteFav() {}
 }

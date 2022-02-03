@@ -6,7 +6,6 @@ class PersonDetails extends Person {
   final List<String> gallery;
   final String birthday;
   final String deathday;
-  final String alsoKnownAs;
   final String biography;
   final String placeOfBirth;
 
@@ -15,7 +14,6 @@ class PersonDetails extends Person {
     this.gallery,
     this.birthday,
     this.deathday,
-    this.alsoKnownAs,
     this.biography,
     this.placeOfBirth,
       int id,

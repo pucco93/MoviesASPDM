@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/SignInSection/SignInPage.dart';
-import 'package:movies/SignUpSection/SignUpPage.dart';
+import 'package:movies/WelcomeSection/SignInSection/SignInPage.dart';
+import 'package:movies/WelcomeSection/SignUpSection/SignUpPage.dart';
 import 'package:movies/HomeSection/HomePage.dart';
 import 'package:movies/Colors/Colors.dart';
 

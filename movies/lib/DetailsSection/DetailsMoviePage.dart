@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hive/hive.dart';
 import 'package:movies/AppBar/AppBar.dart';
 import 'package:movies/Colors/Colors.dart';
 import 'package:movies/Constants/Constants.dart';
-import 'package:movies/DetailsSection/DetailsPersonPage.dart';
-import 'package:movies/DetailsSection/DetailsSeriePage.dart';
 import 'package:movies/SearchSection/GridViewSearch/GridViewCard/GridViewCard.dart';
+import 'package:movies/Utilities/Utilities.dart';
 import 'package:movies/data_manager/DataManager.dart';
 import 'package:movies/models/interfaces/MovieDetails.dart';
 import 'package:movies/models/providers/ProviderFavs.dart';
@@ -26,12 +26,13 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
   DataManager dataManager = DataManager();
   dynamic get _item => widget.item;
   MovieDetails _movieDetails = initialMovieDetails;
+  bool isFavourite = false;
 
-  final ButtonStyle homepageStyle = ElevatedButton.styleFrom(
+  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
       primary: ColorSelect.customBlue,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
 
   void _getDetails() async {
@@ -39,6 +40,16 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
     if (mounted) {
       setState(() {
         _movieDetails = newMovieDetails;
+      });
+    }
+    final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
+    List<dynamic> newList = [];
+    if (_favBox.get("favourites") ?? true) {
+      newList = Utilities.fromHiveToDataGenericItem(_favBox.get("favourites"));
+    }
+    if (newList.indexWhere((element) => element.id == _item.id) >= 0) {
+      setState(() {
+        isFavourite = true;
       });
     }
   }
@@ -51,15 +62,37 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
     super.initState();
   }
 
-  void _openHomepage() async {
-    if (!await launch(_movieDetails.homepage))
+  void _openLink() async {
+    if (!await launch(
+        _movieDetails.homepage != "" ? _movieDetails.homepage : "")) {
       throw 'Could not launch ${_movieDetails.homepage}';
+    }
   }
 
-  void _addToFavourites() {}
+  void _manageFavourites() async {
+    final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
+    List<dynamic> tempList = [];
+    if (_favBox.get("favourites") ?? true) {
+      tempList = _favBox.get("favourites");
+      if (tempList.any((element) => element.id == _item.id)) {
+        tempList.removeWhere((element) => element.id == _item.id);
+        setState(() {
+          isFavourite = false;
+        });
+      } else {
+        tempList = [...tempList, Utilities.fromDataToHiveMovie(_item)];
+        setState(() {
+          isFavourite = true;
+        });
+      }
+    }
+    _favBox.put("favourites", tempList);
+  }
 
   void _launchTrailer() async {
-    // if (!await launch('$youtubePath${movieDetails.}')) throw 'Could not launch $youtubePath${movieDetails.}';
+    if (!await launch('$youtubePath${_movieDetails.trailer}')) {
+      throw 'Could not launch $youtubePath${_movieDetails.trailer}';
+    }
   }
 
   void _navigateBack() {
@@ -100,11 +133,20 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                   alignment: Alignment.center,
                                   children: [
                                     FittedBox(
-                                        child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/images/placeholder_movie.png',
-                                            image:
-                                                '$basePathImages${_item.backdropPath}'),
+                                        child: _item.backdropPath != ""
+                                            ? FadeInImage.assetNetwork(
+                                                placeholder:
+                                                    'assets/images/placeholder_movie.png',
+                                                image:
+                                                    '$basePathImages${_item.backdropPath}')
+                                            : Container(
+                                                height: 240,
+                                                child: const FittedBox(
+                                                    child: Image(
+                                                  image: AssetImage(
+                                                      "assets/images/placeholder_movie.png"),
+                                                  fit: BoxFit.cover,
+                                                ))),
                                         fit: BoxFit.cover),
                                     Container(
                                         height: 240,
@@ -132,7 +174,8 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                         )),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(_movieDetails.title,
+                      child: Text(
+                          _movieDetails.title != "" ? _movieDetails.title : "",
                           style: const TextStyle(
                               fontSize: 28, color: Colors.white70)),
                     ),
@@ -147,11 +190,20 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                     borderRadius: BorderRadius.circular(10.0),
                                     child: Container(
                                         height: 170,
-                                        child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/images/movie_poster_placeholder.jpeg',
-                                            image:
-                                                '$basePathImages${_item.posterPath}'))),
+                                        child: _item.posterPath != ""
+                                            ? FadeInImage.assetNetwork(
+                                                placeholder:
+                                                    'assets/images/movie_poster_placeholder.jpeg',
+                                                image:
+                                                    '$basePathImages${_item.posterPath}')
+                                            : Container(
+                                                height: 170,
+                                                child: const FittedBox(
+                                                    child: Image(
+                                                  image: AssetImage(
+                                                      "assets/images/movie_poster_placeholder.jpeg"),
+                                                  fit: BoxFit.cover,
+                                                ))))),
                                 Transform.translate(
                                     offset: const Offset(5, 10),
                                     child: ClipOval(
@@ -181,15 +233,17 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                               padding:
                                   const EdgeInsets.only(top: 5, bottom: 10),
                               child: ElevatedButton(
-                                  onPressed: _openHomepage,
-                                  style: homepageStyle,
+                                  onPressed: _openLink,
+                                  style: buttonStyle,
                                   child: const Text("Open site"))),
                           Padding(
                               padding: const EdgeInsets.only(bottom: 5),
                               child: ElevatedButton(
-                                  onPressed: _addToFavourites,
-                                  style: homepageStyle,
-                                  child: const Text("Add to favourites")))
+                                  onPressed: _manageFavourites,
+                                  style: buttonStyle,
+                                  child: isFavourite
+                                      ? const Text("Remove from favourites")
+                                      : const Text("Add to favourites")))
                         ])),
                         Row(children: [
                           _movieDetails.watchProviders.isNotEmpty
@@ -211,10 +265,15 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                             height: 60,
                                             width: 60,
                                             color: Colors.white,
-                                            child: FadeInImage.assetNetwork(
-                                                placeholder: '',
-                                                image:
-                                                    '$basePathImages${_movieDetails.watchProviders[index].logoPath}')));
+                                            child: _movieDetails
+                                                        .watchProviders[index]
+                                                        .logoPath !=
+                                                    ""
+                                                ? FadeInImage.assetNetwork(
+                                                    placeholder: '',
+                                                    image:
+                                                        '$basePathImages${_movieDetails.watchProviders[index].logoPath}')
+                                                : Container()));
                                   })
                               : Container()
                         ])
@@ -228,9 +287,11 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                 color: ColorSelect.customBlue,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 10),
-                                child: Text(_movieDetails.description,
-                                    style: const TextStyle(
-                                        fontSize: 16, height: 1.3))))),
+                                child: _movieDetails.description != ""
+                                    ? Text(_movieDetails.description,
+                                        style: const TextStyle(
+                                            fontSize: 16, height: 1.4))
+                                    : Container(width: 0, height: 0)))),
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     _movieDetails.gallery.isNotEmpty
                         ? const Text("Gallery",
@@ -252,11 +313,21 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                   child: Container(
                                       height: 60,
                                       width: 110,
-                                      child: FadeInImage.assetNetwork(
-                                          placeholder:
-                                              'assets/images/placeholder_movie.png',
-                                          image:
-                                              '$basePathImages${_movieDetails.gallery[index]}'))));
+                                      child: _movieDetails.gallery[index] != ""
+                                          ? FadeInImage.assetNetwork(
+                                              placeholder:
+                                                  'assets/images/placeholder_movie.png',
+                                              image:
+                                                  '$basePathImages${_movieDetails.gallery[index]}')
+                                          : Container(
+                                              height: 60,
+                                              width: 110,
+                                              child: const FittedBox(
+                                                  child: Image(
+                                                image: AssetImage(
+                                                    "assets/images/placeholder_movie.png"),
+                                                fit: BoxFit.cover,
+                                              ))))));
                             })
                         : Container(),
                     _movieDetails.similars.isNotEmpty
@@ -275,7 +346,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                             itemCount: _movieDetails.similars.length,
                             itemBuilder: (context, index) {
                               return GridViewCard(
-                                      item: _movieDetails.similars[index]);
+                                  item: _movieDetails.similars[index]);
                             })
                         : Container(),
                   ]))));
