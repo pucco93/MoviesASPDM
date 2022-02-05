@@ -1,10 +1,11 @@
-import 'package:movies/models/interfaces/Movie.dart';
-import 'package:movies/models/interfaces/MovieDetails.dart';
-import 'package:movies/models/interfaces/Person.dart';
-import 'package:movies/models/interfaces/PersonDetails.dart';
-import 'package:movies/models/interfaces/SerieDetails.dart';
-import 'package:movies/models/interfaces/TVSerie.dart';
-import 'package:movies/models/typeAdapters/Movie.dart';
+import 'package:movies/models/interfaces/movie.dart';
+import 'package:movies/models/interfaces/movie_details.dart';
+import 'package:movies/models/interfaces/person.dart';
+import 'package:movies/models/interfaces/person_details.dart';
+import 'package:movies/models/interfaces/serie_details.dart';
+import 'package:movies/models/interfaces/tv_serie.dart';
+import 'package:movies/models/type_adapters/logged_user.dart';
+import 'package:movies/models/type_adapters/movie_hive.dart';
 
 const String bearerV4Token =
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NWUzNjdiYmQ4NDM0Y2ExYzJhNzNkNmM0ZmMyNDAyMiIsInN1YiI6IjYxZDlkMWRhNTVjOTI2MDAxYzJiOTMxYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UQeGEMcj1gHdP9f-4Q0Mx0QMK1iJLWXqo5BlOdfLzwQ";
@@ -86,7 +87,8 @@ const String serieEpisodes = "number_of_episodes";
 Movie initialMovie = Movie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 
 // Initial state MovieHive
-MovieHive initialMovieHive = MovieHive(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
+MovieHive initialMovieHive =
+    MovieHive(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
 
 // Initial state TVSerie
 TVSerie initialSerie = TVSerie(0, "", "", "", "", 0, "", "", "", [], 0, 0, "");
@@ -102,6 +104,8 @@ SerieDetails initialSerieDetails = SerieDetails(0, 0, "", "", [], [], [], 0, "",
 
 PersonDetails initialPersonDetails =
     PersonDetails("", [], "", "", "", "", 0, "", "", [], 0, "", "person");
+
+LoggedUser initialLoggedUser = LoggedUser(0, "", "", "", "", false);
 
 // Genre ids in a map to be easier to access in
 Map genreIds = {

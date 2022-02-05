@@ -1,14 +1,15 @@
-import 'package:movies/models/interfaces/Movie.dart';
-import 'package:movies/models/interfaces/MovieDetails.dart';
-import 'package:movies/models/interfaces/PersonDetails.dart';
+import 'package:movies/models/interfaces/movie.dart';
+import 'package:movies/models/interfaces/movie_details.dart';
+import 'package:movies/models/interfaces/person_details.dart';
 import 'package:movies/models/interfaces/Provider.dart';
-import 'package:movies/models/interfaces/SerieDetails.dart';
-import 'package:movies/models/interfaces/TVSerie.dart';
-import 'package:movies/Constants/Constants.dart';
-import 'package:movies/models/interfaces/Person.dart';
-import 'package:movies/models/typeAdapters/Movie.dart';
-import 'package:movies/models/typeAdapters/Person.dart';
-import 'package:movies/models/typeAdapters/TVSerie.dart';
+import 'package:movies/models/interfaces/serie_details.dart';
+import 'package:movies/models/interfaces/tv_serie.dart';
+import 'package:movies/constants/constants.dart';
+import 'package:movies/models/interfaces/person.dart';
+import 'package:movies/models/type_adapters/logged_user.dart';
+import 'package:movies/models/type_adapters/movie_hive.dart';
+import 'package:movies/models/type_adapters/person_hive.dart';
+import 'package:movies/models/type_adapters/tv_serie.dart';
 
 class Utilities {
   static Movie mapMovie(dynamic item) {
@@ -335,13 +336,8 @@ class Utilities {
 
   static PersonHive fromDataToHivePerson(Person item) {
     List<dynamic> genericItems = fromDataToHiveGenericItem(item.knownFor);
-    PersonHive person = PersonHive(
-        item.id,
-        item.name,
-        item.department,
-        genericItems,
-        item.popularity,
-        item.posterPath);
+    PersonHive person = PersonHive(item.id, item.name, item.department,
+        genericItems, item.popularity, item.posterPath);
     return person;
   }
 
@@ -433,13 +429,8 @@ class Utilities {
 
   static Person fromHiveToDataPerson(PersonHive item) {
     List<dynamic> genericItems = fromHiveToDataGenericItem(item.knownFor);
-    Person person = Person(
-        item.id,
-        item.name,
-        item.department,
-        genericItems,
-        item.popularity,
-        item.posterPath);
+    Person person = Person(item.id, item.name, item.department, genericItems,
+        item.popularity, item.posterPath);
     return person;
   }
 
@@ -469,6 +460,13 @@ class Utilities {
         }
       });
     }
+    return mapped;
+  }
+
+  static LoggedUser mapLoggedUser(dynamic box) {
+    LoggedUser mapped = initialLoggedUser;
+    mapped = LoggedUser(
+        box.id, box.name, box.email, box.password, box.imageUrl, box.isLogged);
     return mapped;
   }
 }
