@@ -89,7 +89,7 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                       child: Text(
                           _personDetails.name != "" ? _personDetails.name : "",
                           style: const TextStyle(
-                              fontSize: 28, color: Colors.white70)),
+                              fontSize: 28)),
                     ),
                     Row(children: [
                       Padding(

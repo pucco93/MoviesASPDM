@@ -117,36 +117,36 @@ class NavDrawer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   ListTile(
-                    title: const Text("Home", style: TextStyle(fontSize: 22)),
+                    title: const Text("Home", style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading: const Icon(Icons.home_outlined, size: 30),
                     onTap: () => _goHome(homeProvider),
                   ),
                   ListTile(
-                    title: const Text("Search", style: TextStyle(fontSize: 22)),
+                    title: const Text("Search", style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading: const Icon(Icons.search_outlined, size: 30),
                     onTap: () => _openSearch(homeProvider),
                   ),
                   ListTile(
                     title:
-                        const Text("Profile", style: TextStyle(fontSize: 22)),
+                        const Text("Profile", style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading:
                         const Icon(Icons.account_circle_outlined, size: 30),
                     onTap: () => _openProfile(homeProvider),
                   ),
                   ListTile(
                     title: const Text("Favourites",
-                        style: TextStyle(fontSize: 22)),
+                        style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading: const Icon(Icons.favorite_outline, size: 30),
                     onTap: () => _openFavourites(homeProvider),
                   ),
                   ListTile(
-                    title: const Text("About", style: TextStyle(fontSize: 22)),
+                    title: const Text("About", style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading: const Icon(Icons.info_outline, size: 30),
                     onTap: _openAbout,
                   ),
                   ListTile(
                     title: const Text("Privacy policy",
-                        style: TextStyle(fontSize: 22)),
+                        style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading: const Icon(Icons.privacy_tip_outlined, size: 30),
                     onTap: _openFakePolicy,
                   )

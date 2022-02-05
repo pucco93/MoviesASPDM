@@ -67,7 +67,7 @@ const String movieDetailsWatchProviders = "watch/providers";
 
 // Provider internal names
 const String itLanguage = "IT";
-const String streaming = "streaming";
+const String flatrate = "flatrate";
 const String providerName = "provider_name";
 const String providerLogo = "logo_path";
 

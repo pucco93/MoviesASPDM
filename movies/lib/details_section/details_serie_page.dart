@@ -4,10 +4,12 @@ import 'package:hive/hive.dart';
 import 'package:movies/app_bar/app_bar.dart';
 import 'package:movies/Colors/colors_theme.dart';
 import 'package:movies/Constants/constants.dart';
+import 'package:movies/models/providers/provider_account.dart';
 import 'package:movies/search_section/grid_view_search/grid_view_card/grid_view_card.dart';
 import 'package:movies/Utilities/utilities.dart';
 import 'package:movies/data_manager/data_manager.dart';
 import 'package:movies/models/interfaces/serie_details.dart';
+import 'package:movies/welcome_section/sign_in_section/sign_in_page.dart';
 import 'package:provider/provider.dart';
 import 'package:movies/models/providers/provider_favs.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,6 +36,16 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
+
+  final ButtonStyle _buttonStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white),
+      primary: ColorSelect.customMagenta,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ));
+
+  final ButtonStyle _textButton = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white));
 
   void _getDetails() async {
     SerieDetails newSerieDetails = await dataManager.getSerieDetails(_item.id);
@@ -82,30 +94,78 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
     }
   }
 
-  void _manageFavourites() async {
+  void _manageFavourites(ProviderAccount accountProvider) async {
     final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
     List<dynamic> tempList = [];
-    if (_favBox.get("favourites") != null) {
-      tempList = _favBox.get("favourites");
-      if (tempList.any((element) => element.id == _item.id)) {
-        tempList.removeWhere((element) => element.id == _item.id);
-        setState(() {
-          isFavourite = false;
-        });
-      } else {
-        tempList = [...tempList, Utilities.fromDataToHiveSerie(_item)];
-        setState(() {
-          isFavourite = true;
-        });
+    if (accountProvider.isLogged) {
+      if (_favBox.get("favourites") != null) {
+        tempList = _favBox.get("favourites");
+        if (tempList.any((element) => element.id == _item.id)) {
+          tempList.removeWhere((element) => element.id == _item.id);
+          setState(() {
+            isFavourite = false;
+          });
+        } else {
+          tempList = [...tempList, Utilities.fromDataToHiveSerie(_item)];
+          setState(() {
+            isFavourite = true;
+          });
+        }
       }
+      await _favBox.put("favourites", tempList);
+    } else {
+      _firstLogin();
     }
-    await _favBox.put("favourites", tempList);
   }
 
   void _navigateBack() {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       Navigator.pop(context);
     });
+  }
+
+  Future<void> _firstLogin() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          backgroundColor: ColorSelect.customBlue,
+          titleTextStyle: const TextStyle(color: Colors.white),
+          contentTextStyle: const TextStyle(color: Colors.white),
+          title: const Text("Oh no it seems you aren't logged!"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text("Sorry but you have to login to use this feature."),
+                Text("Go back, sign in and then use favourite section."),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text("Sign in"),
+              style: _buttonStyle,
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignInPage()));
+              },
+            ),
+            TextButton(
+              child: const Text('Close'),
+              style: _textButton,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -184,7 +244,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                       child: Text(
                           _serieDetails.name != "" ? _serieDetails.name : "",
                           style: const TextStyle(
-                              fontSize: 28, color: Colors.white70)),
+                              fontSize: 28)),
                     ),
                     Row(children: [
                       Padding(
@@ -238,7 +298,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                             child: Column(children: [
                           Text("Seasons: ${_serieDetails.seasons}",
                               style: const TextStyle(fontSize: 16)),
-                              const Padding(padding: EdgeInsets.only(top: 5)),
+                          const Padding(padding: EdgeInsets.only(top: 5)),
                           Text("Episodes: ${_serieDetails.seasons}",
                               style: const TextStyle(fontSize: 16)),
                           Padding(
@@ -248,20 +308,23 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                   onPressed: _openHomepage,
                                   style: buttonStyle,
                                   child: const Text("Open site"))),
-                          Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: ElevatedButton(
-                                  onPressed: _manageFavourites,
-                                  style: buttonStyle,
-                                  child: isFavourite
-                                      ? const Text("Remove from favourites")
-                                      : const Text("Add to favourites")))
+                          Consumer<ProviderAccount>(
+                              builder: (context, accountProvider, child) {
+                            return Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: ElevatedButton(
+                                    onPressed: () =>
+                                        _manageFavourites(accountProvider),
+                                    style: buttonStyle,
+                                    child: isFavourite
+                                        ? const Text("Remove from favourites")
+                                        : const Text("Add to favourites")));
+                          })
                         ])),
-                        Row(children: [
                           _serieDetails.watchProviders.isNotEmpty
                               ? GridView.builder(
-                                  padding: const EdgeInsets.only(
-                                      top: 15, bottom: 15),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 15),
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3),
@@ -288,7 +351,6 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                                 : Container()));
                                   })
                               : Container()
-                        ])
                       ]))
                     ]),
                     Padding(
@@ -302,7 +364,9 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                 child: _serieDetails.description != ""
                                     ? Text(_serieDetails.description,
                                         style: const TextStyle(
-                                            fontSize: 16, height: 1.4))
+                                            fontSize: 16,
+                                            height: 1.4,
+                                            color: Colors.white))
                                     : const SizedBox(width: 0, height: 0)))),
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     _serieDetails.gallery.isNotEmpty

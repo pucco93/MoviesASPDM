@@ -110,7 +110,7 @@ class GridViewCard extends StatelessWidget {
                                               item.mediaType == "person"
                                           ? item.name != "" ? item.name : ""
                                           : item.title != "" ? item.title : "",
-                                      style: const TextStyle(fontSize: 16))))),
+                                      style: const TextStyle(fontSize: 16, color: Colors.white))))),
                     ], fit: StackFit.loose),
                   ))));
     });

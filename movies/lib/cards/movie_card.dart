@@ -67,7 +67,7 @@ class MovieCard extends StatelessWidget {
                                       end: FractionalOffset.bottomCenter,
                                       colors: [
                                         Colors.grey.withOpacity(0.0),
-                                        const Color.fromARGB(255, 30, 30, 30),
+                                        Colors.black,
                                       ],
                                       stops: const [
                                         0.0,
@@ -87,7 +87,7 @@ class MovieCard extends StatelessWidget {
                                                 ? item.name != "" ? item.name : ""
                                                 : item.title != "" ? item.title : "",
                                             style: const TextStyle(
-                                                fontSize: 16))))),
+                                                fontSize: 16, color: Colors.white))))),
                           ],
                         )))),
           ],

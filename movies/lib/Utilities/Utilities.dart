@@ -140,9 +140,9 @@ class Utilities {
         unmapped[movieDetailsWatchProviders]["results"] != null &&
         unmapped[movieDetailsWatchProviders]["results"][itLanguage] != null &&
         unmapped[movieDetailsWatchProviders]["results"][itLanguage]
-                [streaming] !=
+                [flatrate] !=
             null) {
-      unmapped[movieDetailsWatchProviders]["results"][itLanguage][streaming]
+      unmapped[movieDetailsWatchProviders]["results"][itLanguage][flatrate]
           ?.forEach((element) => {
                 watchProviders
                     .add(Provider(element[providerName], element[providerLogo]))
@@ -151,8 +151,8 @@ class Utilities {
     if (unmapped[movieDetailsTrailer] != null &&
         unmapped[movieDetailsTrailer]["results"] != null &&
         unmapped[movieDetailsTrailer]["results"].isNotEmpty &&
-        unmapped[movieDetailsTrailer]["results"][0]["id"] != null) {
-      trailer = unmapped[movieDetailsTrailer]["results"][0]["id"];
+        unmapped[movieDetailsTrailer]["results"][0]["key"] != null) {
+      trailer = unmapped[movieDetailsTrailer]["results"][0]["key"];
     }
     MovieDetails movieDetails = MovieDetails(
         unmapped[movieDetailsRuntime] ?? 0,
@@ -208,9 +208,9 @@ class Utilities {
         unmapped[movieDetailsWatchProviders]["results"] != null &&
         unmapped[movieDetailsWatchProviders]["results"][itLanguage] != null &&
         unmapped[movieDetailsWatchProviders]["results"][itLanguage]
-                [streaming] !=
+                [flatrate] !=
             null) {
-      unmapped[movieDetailsWatchProviders]["results"][itLanguage][streaming]
+      unmapped[movieDetailsWatchProviders]["results"][itLanguage][flatrate]
           ?.forEach((element) => {
                 watchProviders
                     .add(Provider(element[providerName], element[providerLogo]))
@@ -219,8 +219,8 @@ class Utilities {
     if (unmapped[movieDetailsTrailer] != null &&
         unmapped[movieDetailsTrailer]["results"] != null &&
         unmapped[movieDetailsTrailer]["results"][0] != null &&
-        unmapped[movieDetailsTrailer]["results"][0]["id"] != null) {
-      trailer = unmapped[movieDetailsTrailer]["results"][0]["id"];
+        unmapped[movieDetailsTrailer]["results"][0]["key"] != null) {
+      trailer = unmapped[movieDetailsTrailer]["results"][0]["key"];
     }
 
     SerieDetails serieDetails = SerieDetails(

@@ -5,6 +5,7 @@ import 'package:movies/Colors/colors_theme.dart';
 import 'package:movies/favourites_section/grid_item_shimmer.dart';
 import 'package:movies/favourites_section/grid_view_card/grid_view_card.dart';
 import 'package:movies/Utilities/utilities.dart';
+import 'package:movies/welcome_section/sign_in_section/sign_in_page.dart';
 import 'package:movies/welcome_section/sign_up_section/sign_up_page.dart';
 import 'package:movies/data_manager/data_manager.dart';
 import 'package:movies/models/providers/provider_account.dart';
@@ -114,9 +115,9 @@ class NotLogged extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _openSignUp() {
+    void _openSignIn() {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const SignUpPage()));
+          context, MaterialPageRoute(builder: (context) => const SignInPage()));
     }
 
     return Consumer<ProviderAccount>(
@@ -134,7 +135,7 @@ class NotLogged extends StatelessWidget {
         ElevatedButton(
           child: const Text("Sign in", style: TextStyle(fontSize: 22)),
           style: _loginButton,
-          onPressed: _openSignUp,
+          onPressed: _openSignIn,
         )
       ]);
     });

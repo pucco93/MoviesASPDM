@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:movies/Constants/constants.dart';
 import 'package:movies/Utilities/utilities.dart';
 import 'package:movies/home_section/homepage.dart';
 import 'package:movies/models/interfaces/user.dart';
@@ -46,10 +47,14 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
 
-
   @override
   Widget build(BuildContext context) {
-    dynamic tempUser = Utilities.mapLoggedUser(_userBox.get("loggedUser"));
+    dynamic tempUser;
+    if (_userBox.get("loggedUser") != null) {
+      tempUser = Utilities.mapLoggedUser(_userBox.get("loggedUser"));
+    } else {
+      tempUser = initialLoggedUser;
+    }
 
     ThemeMode themeMode;
     switch (WidgetsBinding.instance?.window.platformBrightness.name) {
