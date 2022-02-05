@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:movies/colors/colors_theme.dart';
 import 'package:movies/easter_eggs/terms_policy.dart';
 import 'package:movies/home_section/homepage.dart';
+import 'package:movies/models/interfaces/user.dart';
 import 'package:movies/utilities/utilities.dart';
 import 'package:movies/welcome_section/sign_in_section/sign_in_page.dart';
 import 'package:movies/models/providers/provider_account.dart';
@@ -123,7 +124,10 @@ class _SignUpFormState extends State<SignUpForm> {
       LoggedUser user = LoggedUser(0, _nameController.text,
           _mailController.text, _passwordController.text, "", true);
       _userBox.put("loggedUser", user);
+      User account = User(_nameController.text, _mailController.text,
+          _passwordController.text, "");
       accountProvider.updateLogStatus(true);
+      accountProvider.updateUser(account);
       _redirectToHome();
     } else {
       setState(() {

@@ -80,31 +80,33 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Text(
               accountProvider.name == ""
                   ? "Log in to show your account infos and to use the favourites section"
-                  : "",
+                  : "Thanks ${accountProvider.name} for being with us, hope you enjoy this app",
               style: const TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ))),
         Center(
             child: ClipRRect(
                 child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     color: ColorSelect.customSalmon,
                     child: Text(accountProvider.name,
                         style: const TextStyle(fontSize: 28))),
                 borderRadius: BorderRadius.circular(10.0))),
         Padding(
             padding: accountProvider.name == ""
-                ? const EdgeInsets.all(0)
+                ? const EdgeInsets.symmetric(horizontal: 15, vertical: 10)
                 : const EdgeInsets.only(top: 20)),
         Center(
             child: ClipRRect(
                 child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     color: ColorSelect.customSalmon,
                     child: Text(accountProvider.mail,
                         style: const TextStyle(fontSize: 26))),
                 borderRadius: BorderRadius.circular(10.0))),
         Padding(
             padding: accountProvider.name == ""
-                ? const EdgeInsets.all(0)
+                ? const EdgeInsets.symmetric(horizontal: 15, vertical: 10)
                 : const EdgeInsets.only(top: 20)),
         Center(
             child: ClipRRect(

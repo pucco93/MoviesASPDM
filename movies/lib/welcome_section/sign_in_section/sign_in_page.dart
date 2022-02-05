@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:movies/colors/colors_theme.dart';
+import 'package:movies/home_section/HomePage.dart';
+import 'package:movies/models/interfaces/user.dart';
 import 'package:movies/utilities/utilities.dart';
 import 'package:movies/welcome_section/sign_up_section/sign_up_page.dart';
 import 'package:movies/models/providers/provider_account.dart';
@@ -110,7 +112,56 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
 
-  _checkMailResetPassword() {}
+  final ButtonStyle _buttonStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white),
+      primary: ColorSelect.customMagenta,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ));
+
+  final ButtonStyle _textButton = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white));
+
+  _checkMailResetPassword(ProviderAccount accountProvider) async {
+    final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
+    dynamic user = Utilities.mapLoggedUser(_userBox.get("loggedUser"));
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          backgroundColor: ColorSelect.customBlue,
+          titleTextStyle: const TextStyle(color: Colors.white),
+          contentTextStyle: const TextStyle(color: Colors.white),
+          title: const Text('Please remember your password'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    "I'm sorry you can't remember your password, everyone can forget it."),
+                const Text(
+                    "Since this app is not meant to be released for real usage, right below you can see your password."),
+                const Padding(padding: EdgeInsets.only(top: 15)),
+                Text(user.password ?? "maybe you aren't signed up",
+                    style: const TextStyle(color: Colors.white, fontSize: 22)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Close'),
+              style: _buttonStyle,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   handleResetPassword(ProviderSignIn signInProvider) {
     signInProvider.updateResetPassword(false);
@@ -125,58 +176,62 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProviderSignIn>(builder: (context, signInProvider, child) {
-      return SingleChildScrollView(
-          child: Column(
-        children: [
-          const Text(
-            "Insert your mail account in the field below, we will see if you are a registered member and send you a mail with your current password.\nOtherwise we will redirect you to the sign up page.",
-            style: TextStyle(fontSize: 16),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 15)),
-          TextField(
-            style: const TextStyle(
-              color: Colors.black87,
-              fontFamily: 'Montserrat',
-              fontSize: 18,
+      return Consumer<ProviderAccount>(
+          builder: (context, accountProvider, child) {
+        return SingleChildScrollView(
+            child: Column(
+          children: [
+            const Text(
+              "Insert your mail account in the field below, we will see if you are a registered member and send you a mail with your current password.\nOtherwise we will redirect you to the sign up page.",
+              style: TextStyle(fontSize: 16),
             ),
-            keyboardType: TextInputType.emailAddress,
-            controller: _mailController,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                        color: ColorSelect.customBlue, width: 3.0)),
-                contentPadding: const EdgeInsets.only(
-                    left: 10, top: 5, right: 10, bottom: 5),
-                hintText: "Email",
-                hintStyle: const TextStyle(color: Colors.black54, fontSize: 18),
-                filled: true,
-                fillColor: Colors.white),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 15)),
-          SizedBox(
+            const Padding(padding: EdgeInsets.only(top: 15)),
+            TextField(
+              style: const TextStyle(
+                color: Colors.black87,
+                fontFamily: 'Montserrat',
+                fontSize: 18,
+              ),
+              keyboardType: TextInputType.emailAddress,
+              controller: _mailController,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                          color: ColorSelect.customBlue, width: 3.0)),
+                  contentPadding: const EdgeInsets.only(
+                      left: 10, top: 5, right: 10, bottom: 5),
+                  hintText: "Email",
+                  hintStyle:
+                      const TextStyle(color: Colors.black54, fontSize: 18),
+                  filled: true,
+                  fillColor: Colors.white),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 15)),
+            SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton.icon(
+                    icon: const Icon(Icons.mail, size: 30),
+                    style: _checkMailResetPasswordStyle,
+                    onPressed: () => _checkMailResetPassword(accountProvider),
+                    label: const Text("Retrieve password",
+                        style: TextStyle(color: Colors.white70)))),
+            const Padding(padding: EdgeInsets.only(top: 15)),
+            SizedBox(
               width: double.infinity,
               height: 45,
-              child: ElevatedButton.icon(
-                  icon: const Icon(Icons.mail, size: 30),
-                  style: _checkMailResetPasswordStyle,
-                  onPressed: _checkMailResetPassword,
-                  label: const Text("Reset password",
-                      style: TextStyle(color: Colors.white70)))),
-          const Padding(padding: EdgeInsets.only(top: 15)),
-          SizedBox(
-            width: double.infinity,
-            height: 45,
-            child: ElevatedButton(
-                style: _cancelStyle,
-                onPressed: () => handleResetPassword(signInProvider),
-                child: const Text("Cancel",
-                    style: TextStyle(color: ColorSelect.customBlue))),
-          )
-        ],
-      ));
+              child: ElevatedButton(
+                  style: _cancelStyle,
+                  onPressed: () => handleResetPassword(signInProvider),
+                  child: const Text("Cancel",
+                      style: TextStyle(color: ColorSelect.customBlue))),
+            )
+          ],
+        ));
+      });
     });
   }
 }
@@ -189,6 +244,7 @@ class SignInView extends StatefulWidget {
 
 class _SignInViewState extends State<SignInView> {
   final _mailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   final ButtonStyle _continueLogInStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20, color: ColorSelect.customBlue),
@@ -236,26 +292,68 @@ class _SignInViewState extends State<SignInView> {
   }
 
   _validateMail(ProviderSignIn signInProvider) {
-    final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
-    if (_userBox.get("loggedUser") != null) {
-      LoggedUser tempUser = Utilities.mapLoggedUser(_userBox.get("loggedUser"));
-      if (tempUser.email != _mailController.text) {
-        signInProvider.updateIsInDB(false);
+    if (_mailController.text != "") {
+      final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
+      if (_userBox.get("loggedUser") != null) {
+        LoggedUser tempUser =
+            Utilities.mapLoggedUser(_userBox.get("loggedUser"));
+        if (tempUser.email != _mailController.text) {
+          signInProvider.updateIsInDB(false);
+        } else {
+          signInProvider.updateIsInDB(true);
+          signInProvider.updateMailEntered(true);
+        }
       } else {
+        signInProvider.updateIsInDB(false);
         signInProvider.updateMailEntered(true);
       }
-    } else {
-      signInProvider.updateIsInDB(false);
     }
   }
 
   _signIn(ProviderAccount accountProvider) {
     final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
     LoggedUser tempUser = Utilities.mapLoggedUser(_userBox.get("loggedUser"));
-    LoggedUser user = LoggedUser(tempUser.id, tempUser.name, tempUser.email,
-        tempUser.password, tempUser.imageUrl, true);
-    _userBox.put("loggedUser", user);
-    accountProvider.updateLogStatus(true);
+    if (_mailController.text == tempUser.email &&
+        _passwordController.text == tempUser.password) {
+      LoggedUser user = LoggedUser(tempUser.id, tempUser.name, tempUser.email,
+          tempUser.password, tempUser.imageUrl, true);
+      _userBox.put("loggedUser", user);
+      accountProvider.updateLogStatus(true);
+      final account = User(tempUser.name, tempUser.email, tempUser.password, "");
+      accountProvider.updateUser(account);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      _wrongPassword();
+    }
+  }
+
+  Future<void> _wrongPassword() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          backgroundColor: ColorSelect.customBlue,
+          titleTextStyle: const TextStyle(color: Colors.white),
+          contentTextStyle: const TextStyle(color: Colors.white),
+          title: const Text('Wrong password'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text("Close"),
+              style: _buttonStyle,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _showMyDialog(String type) async {
@@ -264,6 +362,8 @@ class _SignInViewState extends State<SignInView> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           backgroundColor: ColorSelect.customBlue,
           titleTextStyle: const TextStyle(color: Colors.white),
           contentTextStyle: const TextStyle(color: Colors.white),
@@ -317,6 +417,7 @@ class _SignInViewState extends State<SignInView> {
   @override
   void dispose() {
     _mailController.dispose();
+    _passwordController.dispose();
     // final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
     // _userBox.close();
     super.dispose();
@@ -365,8 +466,8 @@ class _SignInViewState extends State<SignInView> {
                         fontFamily: 'Montserrat',
                         fontSize: 18,
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _mailController,
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: _passwordController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0)),
@@ -390,14 +491,12 @@ class _SignInViewState extends State<SignInView> {
                     height: 45,
                     child: ElevatedButton(
                         style: _continueStyle,
-                        onPressed: () => {
-                              signInProvider.isMailEntered
-                                  ? () => _signIn(accountProvider)
-                                  : () => _validateMail(signInProvider)
-                            },
+                        onPressed: signInProvider.isMailEntered
+                            ? () => _signIn(accountProvider)
+                            : () => _validateMail(signInProvider),
                         child: Text(signInProvider.isMailEntered
-                            ? "Continue"
-                            : "Log in"))),
+                            ? "Log in"
+                            : "Continue"))),
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 const Text(
                   "or",
@@ -462,11 +561,22 @@ class _SignInViewState extends State<SignInView> {
                         ..onTap = () => handleResetPassword(signInProvider))
                 ]))
               ])),
+          const Padding(padding: EdgeInsets.only(top: 10)),
           Visibility(
-              visible: !signInProvider.isInDB,
+              visible: !signInProvider.isMailEntered,
+              child: SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                      style: _continueStyle,
+                      onPressed: () => _validateMail(signInProvider),
+                      child: const Text("Continue")))),
+          Visibility(
+              visible: !signInProvider.isInDB && signInProvider.isMailEntered,
               child: Column(children: [
                 const Text(
-                    "Seems you don't have an account, please Sign up with the button below"),
+                    "Seems you don't have an account, please sign up with the button below"),
+                const Padding(padding: EdgeInsets.only(top: 10)),
                 SizedBox(
                     width: double.infinity,
                     height: 45,

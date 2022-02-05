@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:movies/Utilities/utilities.dart';
 import 'package:movies/home_section/homepage.dart';
+import 'package:movies/models/interfaces/user.dart';
 import 'package:movies/models/providers/provider_sign_in.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
@@ -37,15 +39,18 @@ void main() async {
   // _dataBox.deleteFromDisk();
   // _favBox.deleteFromDisk();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
+    dynamic tempUser = Utilities.mapLoggedUser(_userBox.get("loggedUser"));
+
     ThemeMode themeMode;
     switch (WidgetsBinding.instance?.window.platformBrightness.name) {
       case 'light':
@@ -82,7 +87,7 @@ class MyApp extends StatelessWidget {
           themeMode: themeMode,
           home: Consumer<ProviderAccount>(
               builder: (context, accountProvider, child) {
-            return accountProvider.isLogged
+            return accountProvider.isLogged || tempUser.isLogged
                 ? const HomePage()
                 : const WelcomePage();
           }),

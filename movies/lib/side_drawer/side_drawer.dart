@@ -51,6 +51,8 @@ class NavDrawer extends StatelessWidget {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
             backgroundColor: ColorSelect.customBlue,
             titleTextStyle: const TextStyle(color: Colors.white),
             contentTextStyle: const TextStyle(color: Colors.white),

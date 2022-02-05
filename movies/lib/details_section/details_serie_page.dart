@@ -44,7 +44,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
     }
     final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
     List<dynamic> newList = [];
-    if (_favBox.get("favourites") ?? false) {
+    if (_favBox.get("favourites") != null) {
       newList = Utilities.fromHiveToDataGenericItem(_favBox.get("favourites"));
     }
     if (newList.indexWhere((element) => element.id == _item.id) >= 0) {
@@ -85,7 +85,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
   void _manageFavourites() async {
     final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
     List<dynamic> tempList = [];
-    if (_favBox.get("favourites") ?? false) {
+    if (_favBox.get("favourites") != null) {
       tempList = _favBox.get("favourites");
       if (tempList.any((element) => element.id == _item.id)) {
         tempList.removeWhere((element) => element.id == _item.id);
@@ -238,6 +238,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                             child: Column(children: [
                           Text("Seasons: ${_serieDetails.seasons}",
                               style: const TextStyle(fontSize: 16)),
+                              const Padding(padding: EdgeInsets.only(top: 5)),
                           Text("Episodes: ${_serieDetails.seasons}",
                               style: const TextStyle(fontSize: 16)),
                           Padding(
