@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies/colors/colors_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
@@ -18,16 +19,22 @@ class AboutPage extends StatelessWidget {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: ColorSelect.customMagenta,
+                  child: const Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Icon(Icons.arrow_back_ios, color: Colors.white)),
+            onPressed: _backToPreviousPage),
         body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             child: Column(children: [
-              Container(
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.only(top: 20, left: 15),
-                  child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios,
-                          color: Colors.white, size: 30),
-                      onPressed: _backToPreviousPage)),
+              // Container(
+              //     alignment: Alignment.topLeft,
+              //     padding: const EdgeInsets.only(top: 20, left: 15),
+              //     child: IconButton(
+              //         icon: const Icon(Icons.arrow_back_ios,
+              //              size: 30),
+              //         onPressed: _backToPreviousPage)),
               const Align(
                   alignment: Alignment.center,
                   child: Padding(

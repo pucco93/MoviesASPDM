@@ -78,7 +78,7 @@ class PreviewLatestMovie extends StatelessWidget {
                                                   homeProvider
                                                       .latestMovie.title,
                                                   style: const TextStyle(
-                                                      fontSize: 16))))),
+                                                      fontSize: 16, color: Colors.white))))),
                                 ],
                               )))),
                 ],

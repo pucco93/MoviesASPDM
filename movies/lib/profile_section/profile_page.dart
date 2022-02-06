@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:movies/utilities/utilities.dart';
 import 'package:movies/models/interfaces/user.dart';
 import 'package:movies/models/providers/provider_account.dart';
@@ -15,7 +16,14 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {  
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
+
   final ButtonStyle _loginButton = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -36,6 +44,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
+  void initState() {
+    _getDeviceInfo();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     // final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
     // _userBox.close();
@@ -53,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (context, accountProvider, child) {
       return SingleChildScrollView(
           child: Column(children: [
-        const Padding(padding: EdgeInsets.only(top: 95)),
+        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 125 : 95)),
         Align(
           alignment: Alignment.topCenter,
           child: accountProvider.imageUrl == ""
@@ -87,7 +101,9 @@ class _ProfilePageState extends State<ProfilePage> {
         Center(
             child: ClipRRect(
                 child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: accountProvider.name == "" ? 0 : 15,
+                        vertical: accountProvider.name == "" ? 0 : 10),
                     color: ColorSelect.customSalmon,
                     child: Text(accountProvider.name,
                         style: const TextStyle(fontSize: 28))),
@@ -99,7 +115,9 @@ class _ProfilePageState extends State<ProfilePage> {
         Center(
             child: ClipRRect(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: accountProvider.name == "" ? 0 : 15,
+                        vertical: accountProvider.name == "" ? 0 : 10),
                     color: ColorSelect.customSalmon,
                     child: Text(accountProvider.mail,
                         style: const TextStyle(fontSize: 26))),

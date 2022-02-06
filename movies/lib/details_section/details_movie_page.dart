@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive/hive.dart';
 import 'package:movies/app_bar/app_bar.dart';
-import 'package:movies/Colors/colors_theme.dart';
-import 'package:movies/Constants/constants.dart';
+import 'package:movies/colors/colors_theme.dart';
+import 'package:movies/constants/constants.dart';
 import 'package:movies/models/providers/provider_account.dart';
 import 'package:movies/search_section/grid_view_search/grid_view_card/grid_view_card.dart';
 import 'package:movies/Utilities/utilities.dart';
 import 'package:movies/data_manager/data_manager.dart';
 import 'package:movies/models/interfaces/movie_details.dart';
 import 'package:movies/models/providers/provider_favs.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:movies/welcome_section/sign_in_section/sign_in_page.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,9 +27,15 @@ class DetailsMoviePage extends StatefulWidget {
 
 class _DetailsMoviePageState extends State<DetailsMoviePage> {
   DataManager dataManager = DataManager();
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
   dynamic get _item => widget.item;
   MovieDetails _movieDetails = initialMovieDetails;
   bool isFavourite = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
 
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
@@ -36,7 +43,6 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
-
 
   final ButtonStyle _buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20, color: Colors.white),
@@ -72,6 +78,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       _getDetails();
     });
+    _getDeviceInfo();
     super.initState();
   }
 
@@ -92,22 +99,22 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
   void _manageFavourites(ProviderAccount accountProvider) async {
     final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
     List<dynamic> tempList = [];
-    if(accountProvider.isLogged) {
-    if (_favBox.get("favourites") != null) {
-      tempList = _favBox.get("favourites");
-      if (tempList.any((element) => element.id == _item.id)) {
-        tempList.removeWhere((element) => element.id == _item.id);
-        setState(() {
-          isFavourite = false;
-        });
-      } else {
-        tempList = [...tempList, Utilities.fromDataToHiveMovie(_item)];
-        setState(() {
-          isFavourite = true;
-        });
+    if (accountProvider.isLogged) {
+      if (_favBox.get("favourites") != null) {
+        tempList = _favBox.get("favourites");
+        if (tempList.any((element) => element.id == _item.id)) {
+          tempList.removeWhere((element) => element.id == _item.id);
+          setState(() {
+            isFavourite = false;
+          });
+        } else {
+          tempList = [...tempList, Utilities.fromDataToHiveMovie(_item)];
+          setState(() {
+            isFavourite = true;
+          });
+        }
       }
-    }
-    _favBox.put("favourites", tempList);
+      _favBox.put("favourites", tempList);
     } else {
       _firstLogin();
     }
@@ -145,7 +152,9 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
               style: _buttonStyle,
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const SignInPage()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignInPage()));
               },
             ),
             TextButton(
@@ -179,7 +188,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
               padding: const EdgeInsets.only(top: 50),
               child: FloatingActionButton(
                   onPressed: _navigateBack,
-                  backgroundColor: const Color.fromARGB(215, 255, 255, 255),
+                  backgroundColor: ColorSelect.customMagenta,
                   child: const Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: Icon(Icons.arrow_back_ios, color: Colors.white)))),
@@ -188,7 +197,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Column(children: [
-                    const Padding(padding: EdgeInsets.only(top: 75)),
+                    Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 95 : 75)),
                     InkWell(
                         onTap: _launchTrailer,
                         child: ClipRRect(
@@ -242,8 +251,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(
                           _movieDetails.title != "" ? _movieDetails.title : "",
-                          style: const TextStyle(
-                              fontSize: 28)),
+                          style: const TextStyle(fontSize: 28)),
                     ),
                     Row(children: [
                       Padding(
@@ -305,44 +313,44 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                           Consumer<ProviderAccount>(
                               builder: (context, accountProvider, child) {
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: ElevatedButton(
-                                  onPressed: () => _manageFavourites(accountProvider),
-                                  style: buttonStyle,
-                                  child: isFavourite
-                                      ? const Text("Remove from favourites")
-                                      : const Text("Add to favourites")));})
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: ElevatedButton(
+                                    onPressed: () =>
+                                        _manageFavourites(accountProvider),
+                                    style: buttonStyle,
+                                    child: isFavourite
+                                        ? const Text("Remove from favourites")
+                                        : const Text("Add to favourites")));
+                          })
                         ])),
-                          _movieDetails.watchProviders.isNotEmpty
-                              ? GridView.builder(
-                                  padding: const EdgeInsets.only(
-                                      top: 15, bottom: 15),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2),
-                                  shrinkWrap: true,
-                                  physics: const ScrollPhysics(),
-                                  itemCount:
-                                      _movieDetails.watchProviders.length,
-                                  itemBuilder: (context, index) {
-                                    return ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: Container(
-                                            height: 60,
-                                            width: 60,
-                                            color: Colors.white,
-                                            child: _movieDetails
-                                                        .watchProviders[index]
-                                                        .logoPath !=
-                                                    ""
-                                                ? FadeInImage.assetNetwork(
-                                                    placeholder: '',
-                                                    image:
-                                                        '$basePathImages${_movieDetails.watchProviders[index].logoPath}')
-                                                : Container()));
-                                  })
-                              : Container()
+                        _movieDetails.watchProviders.isNotEmpty
+                            ? GridView.builder(
+                                padding:
+                                    const EdgeInsets.only(top: 15, bottom: 15),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2),
+                                shrinkWrap: true,
+                                physics: const ScrollPhysics(),
+                                itemCount: _movieDetails.watchProviders.length,
+                                itemBuilder: (context, index) {
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Container(
+                                          height: 60,
+                                          width: 60,
+                                          color: Colors.white,
+                                          child: _movieDetails
+                                                      .watchProviders[index]
+                                                      .logoPath !=
+                                                  ""
+                                              ? FadeInImage.assetNetwork(
+                                                  placeholder: '',
+                                                  image:
+                                                      '$basePathImages${_movieDetails.watchProviders[index].logoPath}')
+                                              : Container()));
+                                })
+                            : Container()
                       ]))
                     ]),
                     Padding(
@@ -356,7 +364,9 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                 child: _movieDetails.description != ""
                                     ? Text(_movieDetails.description,
                                         style: const TextStyle(
-                                            fontSize: 16, height: 1.4,color: Colors.white))
+                                            fontSize: 16,
+                                            height: 1.4,
+                                            color: Colors.white))
                                     : const SizedBox(width: 0, height: 0)))),
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     _movieDetails.gallery.isNotEmpty

@@ -65,8 +65,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final _pageOptions = [
       const HomePageBody(),
-      SearchPage(),
-      ProfilePage(),
+      const SearchPage(),
+      const ProfilePage(),
       const FavouritesPage(),
       const AboutPage()
     ];

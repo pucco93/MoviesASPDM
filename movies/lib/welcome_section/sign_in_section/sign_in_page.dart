@@ -49,7 +49,7 @@ class _SignInPageState extends State<SignInPage> {
                 Container(
                     child: const Text('Hi',
                         style: TextStyle(
-                            fontSize: 35, fontWeight: FontWeight.w500)),
+                            fontSize: 35, fontWeight: FontWeight.w500, color: Colors.white)),
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(left: 30)),
                 const Padding(padding: EdgeInsets.only(top: 20)),

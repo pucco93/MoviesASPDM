@@ -18,11 +18,11 @@ class _TermsPolicyState extends State<TermsPolicy> {
   Widget build(BuildContext context) {
 
   const TextStyle textStyle =
-      TextStyle(fontFamily: 'montserrat', fontSize: 16);
+      TextStyle(fontFamily: 'montserrat', fontSize: 16, color: Colors.white);
   const TextStyle titleStyle =
-      TextStyle(fontFamily: 'montserrat', fontSize: 24);
+      TextStyle(fontFamily: 'montserrat', fontSize: 24, color: Colors.white);
   const TextStyle subTitleStyle =
-      TextStyle(fontFamily: 'montserrat', fontSize: 20);
+      TextStyle(fontFamily: 'montserrat', fontSize: 20, color: Colors.white);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,

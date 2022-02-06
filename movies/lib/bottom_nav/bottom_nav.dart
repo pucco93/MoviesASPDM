@@ -29,6 +29,7 @@ class BottomNav extends StatelessWidget {
             child:
                 Consumer<ProviderHome>(builder: (context, homeProvider, child) {
               return BottomNavigationBar(
+                
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
                 backgroundColor: ColorSelect.customBlue,
@@ -46,7 +47,7 @@ class BottomNav extends StatelessWidget {
                               shape: BoxShape.circle),
                           child: const Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.home_outlined, size: 30)))),
+                              child: Icon(Icons.home_outlined, size: 30, color: Colors.white)))),
                   BottomNavigationBarItem(
                       label: "Search",
                       icon: Container(
@@ -57,7 +58,7 @@ class BottomNav extends StatelessWidget {
                               shape: BoxShape.circle),
                           child: const Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.search_outlined, size: 30)))),
+                              child: Icon(Icons.search_outlined, size: 30, color: Colors.white)))),
                   BottomNavigationBarItem(
                       label: "Profile",
                       icon: Container(
@@ -69,7 +70,7 @@ class BottomNav extends StatelessWidget {
                           child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(Icons.account_circle_outlined,
-                                  size: 30)))),
+                                  size: 30, color: Colors.white)))),
                   BottomNavigationBarItem(
                       label: "Favourites",
                       icon: Container(
@@ -81,7 +82,7 @@ class BottomNav extends StatelessWidget {
                           child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(Icons.favorite_outline_outlined,
-                                  size: 30)))),
+                                  size: 30, color: Colors.white)))),
                 ],
                 onTap: (index) => _changeCurrentPageIndex(index, homeProvider),
               );

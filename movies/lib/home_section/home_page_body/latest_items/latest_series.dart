@@ -76,7 +76,7 @@ class PreviewLatestSerie extends StatelessWidget {
                                               padding: const EdgeInsets.all(5),
                                               child: Text(homeProvider.latestSerie.name,
                                                   style: const TextStyle(
-                                                      fontSize: 16))))),
+                                                      fontSize: 16, color: Colors.white))))),
                                 ],
                               )))),
                 ],

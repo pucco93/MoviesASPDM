@@ -102,10 +102,10 @@ class NavDrawer extends StatelessWidget {
 
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: const Align(
-              child: Icon(Icons.arrow_back_outlined, size: 30),
-              alignment: Alignment.center),
-          backgroundColor: ColorSelect.customSalmon,
+          backgroundColor: ColorSelect.customMagenta,
+                  child: const Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Icon(Icons.arrow_back_ios, color: Colors.white)),
           onPressed: _closeDrawer,
         ),
         body: Container(
@@ -118,36 +118,36 @@ class NavDrawer extends StatelessWidget {
                 children: [
                   ListTile(
                     title: const Text("Home", style: TextStyle(fontSize: 22,color: Colors.white)),
-                    leading: const Icon(Icons.home_outlined, size: 30),
+                    leading: const Icon(Icons.home_outlined, size: 30, color: Colors.white),
                     onTap: () => _goHome(homeProvider),
                   ),
                   ListTile(
                     title: const Text("Search", style: TextStyle(fontSize: 22,color: Colors.white)),
-                    leading: const Icon(Icons.search_outlined, size: 30),
+                    leading: const Icon(Icons.search_outlined, size: 30, color: Colors.white),
                     onTap: () => _openSearch(homeProvider),
                   ),
                   ListTile(
                     title:
                         const Text("Profile", style: TextStyle(fontSize: 22,color: Colors.white)),
                     leading:
-                        const Icon(Icons.account_circle_outlined, size: 30),
+                        const Icon(Icons.account_circle_outlined, size: 30, color: Colors.white),
                     onTap: () => _openProfile(homeProvider),
                   ),
                   ListTile(
                     title: const Text("Favourites",
                         style: TextStyle(fontSize: 22,color: Colors.white)),
-                    leading: const Icon(Icons.favorite_outline, size: 30),
+                    leading: const Icon(Icons.favorite_outline, size: 30, color: Colors.white),
                     onTap: () => _openFavourites(homeProvider),
                   ),
                   ListTile(
                     title: const Text("About", style: TextStyle(fontSize: 22,color: Colors.white)),
-                    leading: const Icon(Icons.info_outline, size: 30),
+                    leading: const Icon(Icons.info_outline, size: 30, color: Colors.white),
                     onTap: _openAbout,
                   ),
                   ListTile(
                     title: const Text("Privacy policy",
                         style: TextStyle(fontSize: 22,color: Colors.white)),
-                    leading: const Icon(Icons.privacy_tip_outlined, size: 30),
+                    leading: const Icon(Icons.privacy_tip_outlined, size: 30, color: Colors.white),
                     onTap: _openFakePolicy,
                   )
                 ],

@@ -9,6 +9,7 @@ import 'package:movies/search_section/grid_view_search/grid_view_card/grid_view_
 import 'package:movies/Utilities/utilities.dart';
 import 'package:movies/data_manager/data_manager.dart';
 import 'package:movies/models/interfaces/serie_details.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:movies/welcome_section/sign_in_section/sign_in_page.dart';
 import 'package:provider/provider.dart';
 import 'package:movies/models/providers/provider_favs.dart';
@@ -26,9 +27,15 @@ class DetailsSeriePage extends StatefulWidget {
 
 class _DetailsSeriePageState extends State<DetailsSeriePage> {
   DataManager dataManager = DataManager();
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
   dynamic get _item => widget.item;
   SerieDetails _serieDetails = initialSerieDetails;
   bool isFavourite = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
 
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
@@ -71,6 +78,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       _getDetails();
     });
+    _getDeviceInfo();
     super.initState();
   }
 
@@ -180,7 +188,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
               padding: const EdgeInsets.only(top: 50),
               child: FloatingActionButton(
                   onPressed: _navigateBack,
-                  backgroundColor: const Color.fromARGB(215, 255, 255, 255),
+                  backgroundColor: ColorSelect.customMagenta,
                   child: const Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: Icon(Icons.arrow_back_ios, color: Colors.white)))),
@@ -189,7 +197,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Column(children: [
-                    const Padding(padding: EdgeInsets.only(top: 75)),
+                    Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 95 : 75)),
                     InkWell(
                         onTap: _launchTrailer,
                         child: ClipRRect(

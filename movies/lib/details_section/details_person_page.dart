@@ -7,6 +7,7 @@ import 'package:movies/search_section/grid_view_search/grid_view_card/grid_view_
 import 'package:movies/data_manager/data_manager.dart';
 import 'package:movies/models/interfaces/person_details.dart';
 import 'package:movies/models/providers/provider_favs.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,8 +22,14 @@ class DetailsPersonPage extends StatefulWidget {
 
 class _DetailsPersonPageState extends State<DetailsPersonPage> {
   DataManager dataManager = DataManager();
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
   dynamic get _item => widget.item;
   PersonDetails _personDetails = initialPersonDetails;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
 
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
@@ -46,6 +53,7 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       _getDetails();
     });
+    _getDeviceInfo();
     super.initState();
   }
 
@@ -74,7 +82,7 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
               padding: const EdgeInsets.only(top: 50),
               child: FloatingActionButton(
                   onPressed: _navigateBack,
-                  backgroundColor: const Color.fromARGB(215, 255, 255, 255),
+                  backgroundColor: ColorSelect.customMagenta,
                   child: const Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: Icon(Icons.arrow_back_ios, color: Colors.white)))),
@@ -83,7 +91,7 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Column(children: [
-                    const Padding(padding: EdgeInsets.only(top: 55)),
+                    Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 95 : 55)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(

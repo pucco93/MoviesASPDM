@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:movies/colors/colors_theme.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:movies/utilities/utilities.dart';
 import 'package:movies/data_manager/data_manager.dart';
 import 'package:movies/models/providers/provider_search.dart';
@@ -17,6 +18,12 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final _searchController = TextEditingController();
   DataManager dataManager = DataManager();
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
 
   final ButtonStyle _searchButtonStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
@@ -76,6 +83,7 @@ class _SearchPageState extends State<SearchPage> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _discoverItems(searchProvider, false);
     });
+    _getDeviceInfo();
     super.initState();
   }
 
@@ -92,7 +100,7 @@ class _SearchPageState extends State<SearchPage> {
     return Consumer<ProviderSearch>(builder: (context, searchProvider, child) {
       return SingleChildScrollView(
           child: Column(children: [
-        const Padding(padding: EdgeInsets.only(top: 95)),
+        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(

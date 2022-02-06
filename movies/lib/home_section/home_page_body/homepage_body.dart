@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movies/Constants/constants.dart';
 import 'package:movies/Utilities/utilities.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movies/data_manager/data_manager.dart';
@@ -28,6 +29,8 @@ class HomePageBody extends StatefulWidget {
 
 class _HomePageBodyState extends State<HomePageBody> {
   DataManager dataManager = DataManager();
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
 
   _getTrending(ProviderHome homeProvider, [bool forceRefresh = false]) async {
     final Box<dynamic> _dataBox = Hive.box<dynamic>("dataBox");
@@ -188,6 +191,10 @@ class _HomePageBodyState extends State<HomePageBody> {
     _getUpcomingMovies(homeProvider, true);
   }
 
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
+
   @override
   void initState() {
     ProviderHome homeProvider =
@@ -203,6 +210,7 @@ class _HomePageBodyState extends State<HomePageBody> {
       _getPopularSeries(homeProvider);
       _getPeople(homeProvider);
     });
+    _getDeviceInfo();
     super.initState();
   }
 
@@ -221,7 +229,8 @@ class _HomePageBodyState extends State<HomePageBody> {
           child: SingleChildScrollView(
               child: Column(
             children: [
-              const Padding(padding: EdgeInsets.only(top: 95)),
+              Padding(
+                  padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
               const Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -329,7 +338,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft,
                   child: const PeopleList()),
-              const Padding(padding: EdgeInsets.only(top: 90)),
+              Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
             ],
           )));
     });

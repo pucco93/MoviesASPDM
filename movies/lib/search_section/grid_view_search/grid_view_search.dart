@@ -1,27 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:movies/models/providers/provider_search.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:provider/provider.dart';
 import 'grid_item_shimmer.dart';
 import 'grid_view_card/grid_view_card.dart';
 
-class GridViewSearch extends StatelessWidget {
+class GridViewSearch extends StatefulWidget {
   const GridViewSearch({Key? key}) : super(key: key);
+
+  @override
+  State<GridViewSearch> createState() => _GridViewSearchState();
+}
+
+class _GridViewSearchState extends State<GridViewSearch> {
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
+
+  @override
+  void initState() {
+    _getDeviceInfo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ProviderSearch>(builder: (context, searchProvider, child) {
-      return searchProvider.isLoading ? const GridViewShimmer() : GridView.builder(
-          padding: const EdgeInsets.only(top: 15, bottom: 80),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2),
-          shrinkWrap: true,
-          physics: const ScrollPhysics(),
-          itemCount: searchProvider.searchedItems.length,
-          itemBuilder: (context, index) {
-            return searchProvider.searchedItems.isNotEmpty
+      return searchProvider.isLoading
+          ? const GridViewShimmer()
+          : GridView.builder(
+              padding:
+                  EdgeInsets.only(top: 15, bottom: _isIPhoneNotch ? 110 : 80),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              itemCount: searchProvider.searchedItems.length,
+              itemBuilder: (context, index) {
+                return searchProvider.searchedItems.isNotEmpty
                     ? GridViewCard(item: searchProvider.searchedItems[index])
                     : const NoElementsFound();
-          });
+              });
     });
   }
 }

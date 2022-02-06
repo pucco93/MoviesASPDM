@@ -5,6 +5,7 @@ import 'package:movies/Colors/colors_theme.dart';
 import 'package:movies/favourites_section/grid_item_shimmer.dart';
 import 'package:movies/favourites_section/grid_view_card/grid_view_card.dart';
 import 'package:movies/Utilities/utilities.dart';
+import 'package:movies/utilities/device_info.dart';
 import 'package:movies/welcome_section/sign_in_section/sign_in_page.dart';
 import 'package:movies/welcome_section/sign_up_section/sign_up_page.dart';
 import 'package:movies/data_manager/data_manager.dart';
@@ -21,6 +22,12 @@ class FavouritesPage extends StatefulWidget {
 
 class _FavouritesPageState extends State<FavouritesPage> {
   DataManager dataManager = DataManager();
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
 
   void _getFavs(ProviderFavs favProvider) async {
     final Box<dynamic> _favBox = Hive.box<dynamic>("favBox");
@@ -39,6 +46,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
           Provider.of<ProviderFavs>(context, listen: false);
       _getFavs(favProvider);
     });
+    _getDeviceInfo();
     super.initState();
   }
 
@@ -57,7 +65,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
         return accountProvider.isLogged
             ? SingleChildScrollView(
                 child: Column(children: [
-                const Padding(padding: EdgeInsets.only(top: 95)),
+                Padding(
+                    padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
                 const Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -67,7 +76,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 favsProvider.isFavLoading
                     ? const GridViewShimmer()
                     : GridView.builder(
-                        padding: const EdgeInsets.only(top: 15, bottom: 80),
+                        padding: EdgeInsets.only(
+                            top: 15, bottom: _isIPhoneNotch ? 115 : 80),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2),
@@ -102,8 +112,20 @@ class NoElementsFound extends StatelessWidget {
   }
 }
 
-class NotLogged extends StatelessWidget {
-  NotLogged({Key? key}) : super(key: key);
+class NotLogged extends StatefulWidget {
+  const NotLogged({Key? key}) : super(key: key);
+
+  @override
+  State<NotLogged> createState() => _NotLoggedState();
+}
+
+class _NotLoggedState extends State<NotLogged> {
+  DeviceInfo deviceInfo = DeviceInfo();
+  bool _isIPhoneNotch = false;
+
+  Future<void> _getDeviceInfo() async {
+    _isIPhoneNotch = await deviceInfo.isIPhoneNotch();
+  }
 
   final ButtonStyle _loginButton = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20),
@@ -112,6 +134,12 @@ class NotLogged extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ));
+
+  @override
+  void initState() {
+    _getDeviceInfo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +151,7 @@ class NotLogged extends StatelessWidget {
     return Consumer<ProviderAccount>(
         builder: (context, accountProvider, child) {
       return Column(children: [
-        const Padding(padding: EdgeInsets.only(top: 100)),
+        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 100)),
         const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: Center(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies/Constants/constants.dart';
+import 'package:movies/constants/constants.dart';
 import 'package:movies/details_section/details_movie_page.dart';
 import 'package:movies/details_section/details_person_page.dart';
 import 'package:movies/details_section/details_serie_page.dart';
