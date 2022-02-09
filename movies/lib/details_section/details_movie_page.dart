@@ -178,6 +178,19 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    double textPadding = 75;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      if (_isIPhoneNotch) {
+        textPadding = 70;
+      } else {
+        textPadding = 50;
+      }
+    } else {
+      if (_isIPhoneNotch) {
+        textPadding = 95;
+      }
+    }
     return Consumer<ProviderFavs>(builder: (context, favProvider, child) {
       return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -197,13 +210,13 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Column(children: [
-                    Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 95 : 75)),
+                    Padding(padding: EdgeInsets.only(top: textPadding)),
                     InkWell(
                         onTap: _launchTrailer,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: SizedBox(
-                              height: 240,
+                              height: MediaQuery.of(context).orientation == Orientation.landscape ? 330 : 240,
                               child: Stack(
                                   alignment: Alignment.center,
                                   children: [
@@ -329,7 +342,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                     const EdgeInsets.only(top: 15, bottom: 15),
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2),
+                                        crossAxisCount: 7),
                                 shrinkWrap: true,
                                 physics: const ScrollPhysics(),
                                 itemCount: _movieDetails.watchProviders.length,
@@ -378,8 +391,8 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                         ? GridView.builder(
                             padding: const EdgeInsets.only(top: 15, bottom: 20),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2),
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),
                             itemCount: _movieDetails.gallery.length,
@@ -415,8 +428,8 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                         ? GridView.builder(
                             padding: const EdgeInsets.only(top: 15, bottom: 20),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2),
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),
                             itemCount: _movieDetails.similars.length,

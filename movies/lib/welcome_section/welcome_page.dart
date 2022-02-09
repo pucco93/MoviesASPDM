@@ -63,8 +63,9 @@ class _WelcomePageState extends State<WelcomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Image(image: AssetImage("assets/images/cinema_welcome.jpg")),
-            const Padding(padding: EdgeInsets.only(top: 100, bottom: 50)),
+            Image(image: const AssetImage("assets/images/cinema_welcome.jpg"), 
+            width: MediaQuery.of(context).orientation == Orientation.landscape ? 200 : double.infinity),
+            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).orientation == Orientation.landscape ? 0 : 100, bottom: MediaQuery.of(context).orientation == Orientation.landscape ? 25 : 50)),
             ElevatedButton(
                 style: style,
                 onPressed: openSignUp,

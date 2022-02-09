@@ -71,7 +71,20 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
+    
+    double textPadding = 95;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      if (_isIPhoneNotch) {
+        textPadding = 70;
+      } else {
+        textPadding = 50;
+      }
+    } else {
+      if (_isIPhoneNotch) {
+        textPadding = 115;
+      }
+    }
     return Consumer<ProviderFavs>(builder: (context, favProvider, child) {
       return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -91,7 +104,7 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Column(children: [
-                    Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 95 : 55)),
+                    Padding(padding: EdgeInsets.only(top: textPadding)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(
@@ -160,7 +173,8 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                                         ? _personDetails.biography
                                         : "",
                                     style: const TextStyle(
-                                        fontSize: 16, height: 1.4))))),
+                                        fontSize: 16, height: 1.4,
+                                            color: Colors.white))))),
                     const Padding(padding: EdgeInsets.only(top: 20)),
                     _personDetails.gallery.isNotEmpty
                         ? const Text("Gallery",
@@ -171,8 +185,8 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                         ? GridView.builder(
                             padding: const EdgeInsets.only(top: 15, bottom: 20),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2),
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),
                             itemCount: _personDetails.gallery.length,
@@ -216,8 +230,8 @@ class _DetailsPersonPageState extends State<DetailsPersonPage> {
                         ? GridView.builder(
                             padding: const EdgeInsets.only(top: 15, bottom: 20),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2),
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),
                             itemCount: _item.knownFor.length,

@@ -34,8 +34,8 @@ class _GridViewSearchState extends State<GridViewSearch> {
           : GridView.builder(
               padding:
                   EdgeInsets.only(top: 15, bottom: _isIPhoneNotch ? 110 : 80),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2),
               shrinkWrap: true,
               physics: const ScrollPhysics(),
               itemCount: searchProvider.searchedItems.length,

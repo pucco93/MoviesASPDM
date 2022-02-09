@@ -59,6 +59,19 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    double textPadding = 100;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      if (_isIPhoneNotch) {
+        textPadding = 70;
+      } else {
+        textPadding = 50;
+      }
+    } else {
+      if (_isIPhoneNotch) {
+        textPadding = 115;
+      }
+    }
     return Consumer<ProviderAccount>(
         builder: (context, accountProvider, child) {
       return Consumer<ProviderFavs>(builder: (context, favsProvider, child) {
@@ -66,7 +79,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
             ? SingleChildScrollView(
                 child: Column(children: [
                 Padding(
-                    padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
+                    padding: EdgeInsets.only(top: textPadding)),
                 const Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -79,8 +92,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         padding: EdgeInsets.only(
                             top: 15, bottom: _isIPhoneNotch ? 115 : 80),
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2),
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2),
                         shrinkWrap: true,
                         physics: const ScrollPhysics(),
                         itemCount: favsProvider.favList.length,
@@ -148,10 +161,23 @@ class _NotLoggedState extends State<NotLogged> {
           context, MaterialPageRoute(builder: (context) => const SignInPage()));
     }
 
+    double textPadding = 100;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      if (_isIPhoneNotch) {
+        textPadding = 70;
+      } else {
+        textPadding = 50;
+      }
+    } else {
+      if (_isIPhoneNotch) {
+        textPadding = 115;
+      }
+    }
+
     return Consumer<ProviderAccount>(
         builder: (context, accountProvider, child) {
       return Column(children: [
-        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 100)),
+        Padding(padding: EdgeInsets.only(top: textPadding)),
         const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: Center(

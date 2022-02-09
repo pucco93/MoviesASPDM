@@ -45,11 +45,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         icon: const Icon(Icons.arrow_back_ios,
                             color: Colors.white, size: 30),
                         onPressed: _backToPreviousPage)),
-                const Padding(padding: EdgeInsets.only(top: 200)),
+                Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).orientation == Orientation.landscape ? 0 : 200)),
                 Container(
                     child: const Text('Sign up',
                         style: TextStyle(
-                            fontSize: 35, fontWeight: FontWeight.w500)),
+                            fontSize: 35, fontWeight: FontWeight.w500, color: Colors.white)),
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(left: 30)),
                 const Padding(padding: EdgeInsets.only(top: 20)),
@@ -171,7 +171,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     return Consumer<ProviderAccount>(
         builder: (context, accountProvider, child) {
-      return Padding(
+      return SingleChildScrollView(child: Padding(
           padding:
               const EdgeInsets.only(top: 20, bottom: 20, left: 30, right: 30),
           child: Column(children: [
@@ -324,7 +324,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 child: const Text(
                     "Passwords are not matching, please try writing them again."),
                 visible: _passwordIncorrect),
-          ]));
+          ])));
     });
   }
 }

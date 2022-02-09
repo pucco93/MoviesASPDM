@@ -45,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
                         icon: const Icon(Icons.arrow_back_ios,
                             color: Colors.white, size: 30),
                         onPressed: _backToPreviousPage)),
-                const Padding(padding: EdgeInsets.only(top: 200)),
+                Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).orientation == Orientation.landscape ? 0 : 200)),
                 Container(
                     child: const Text('Hi',
                         style: TextStyle(
@@ -418,6 +418,10 @@ class _SignInViewState extends State<SignInView> {
   void dispose() {
     _mailController.dispose();
     _passwordController.dispose();
+    ProviderSignIn signInProvider =
+        Provider.of<ProviderSignIn>(context, listen: false);
+    signInProvider.updateMailEntered(false);
+    signInProvider.updateIsInDB(false);
     // final Box<LoggedUser> _userBox = Hive.box<LoggedUser>("userBox");
     // _userBox.close();
     super.dispose();

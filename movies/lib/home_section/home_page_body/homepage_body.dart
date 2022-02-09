@@ -222,7 +222,19 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
+    double textPadding = 95;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      if (_isIPhoneNotch) {
+        textPadding = 70;
+      } else {
+        textPadding = 50;
+      }
+    } else {
+      if (_isIPhoneNotch) {
+        textPadding = 115;
+      }
+    }
     return Consumer<ProviderHome>(builder: (context, homeProvider, child) {
       return RefreshIndicator(
           onRefresh: () => _pullRefresh(homeProvider),
@@ -230,7 +242,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               child: Column(
             children: [
               Padding(
-                  padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
+                  padding: EdgeInsets.only(top: textPadding)),
               const Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(

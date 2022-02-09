@@ -97,10 +97,23 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    double textPadding = 95;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      if (_isIPhoneNotch) {
+        textPadding = 70;
+      } else {
+        textPadding = 50;
+      }
+    } else {
+      if (_isIPhoneNotch) {
+        textPadding = 115;
+      }
+    }
+
     return Consumer<ProviderSearch>(builder: (context, searchProvider, child) {
       return SingleChildScrollView(
           child: Column(children: [
-        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 115 : 95)),
+        Padding(padding: EdgeInsets.only(top: textPadding)),
         const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
