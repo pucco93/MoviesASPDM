@@ -25,7 +25,7 @@ La UI presenta elementi di facile utilizzo per device mobile, come liste orizzon
 I campi per inserire gli input sono mirati ad aprire la keyboard dello smartphone con il tipo che l'app si aspetta (nel caso della mail il textfield apre la keyboard con i suggerimenti le mail già inserite in altri field della stessa tipologia e con i pulsanti della tastiera per velocizzare l'inserimento di un mail).
   
 Splashscreen
-![splashscreen](/movies/assets/screenshots/Splashscreen.png?raw=true "Splashcreen")
+![splashscreen](/movies/assets/screenshots/Splashscreen.png?raw=true width=500 "Splashcreen")
 ---
 Welcome page
 ![Welcome page](/movies/assets/screenshots/Welcome_page.png?raw=true "Welcome page")
