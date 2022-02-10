@@ -39,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
   _discoverItems(ProviderSearch searchProvider, bool forceRefresh) async {
     final Box<dynamic> _dataBox = Hive.box<dynamic>("dataBox");
     List<dynamic> newDiscoverItems = [];
-    if (_dataBox.get("discover") != null) {
+    if (forceRefresh == false && _dataBox.get("discover") != null) {
       newDiscoverItems =
           Utilities.fromHiveToDataGenericItem(_dataBox.get("discover"));
     } else {
@@ -56,12 +56,14 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   _searchItems(ProviderSearch searchProvider) async {
-    searchProvider.updateLoader(true);
-    List<dynamic> newSearchedItems =
-        await dataManager.search(searchProvider.searchText);
-    searchProvider.updateSearchedItems(newSearchedItems);
-    searchProvider.updateIsSearch(true);
-    searchProvider.updateLoader(false);
+    if (searchProvider.searchText != "") {
+      searchProvider.updateLoader(true);
+      List<dynamic> newSearchedItems =
+          await dataManager.search(searchProvider.searchText);
+      searchProvider.updateSearchedItems(newSearchedItems);
+      searchProvider.updateIsSearch(true);
+      searchProvider.updateLoader(false);
+    }
   }
 
   // _filterClick(ProviderSearch searchProvider) {
@@ -97,7 +99,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    double textPadding = 95;
+    double textPadding = 105;
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       if (_isIPhoneNotch) {
         textPadding = 70;
@@ -176,7 +178,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: ColorSelect.customBlue, fontSize: 18),
                   onChanged: (String? newValue) {
                     searchProvider.updateDropdownValue(newValue!);
-                    _discoverItems(searchProvider, false);
+                    _discoverItems(searchProvider, true);
                     _searchController.text = "";
                   },
                   items: <String>['Movie', 'TV serie']

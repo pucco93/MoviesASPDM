@@ -223,7 +223,7 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(BuildContext context) {    
-    double textPadding = 95;
+    double textPadding = 105;
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       if (_isIPhoneNotch) {
         textPadding = 70;

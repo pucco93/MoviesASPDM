@@ -67,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (context, accountProvider, child) {
       return SingleChildScrollView(
           child: Column(children: [
-        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 125 : 95)),
+        Padding(padding: EdgeInsets.only(top: _isIPhoneNotch ? 125 : 105)),
         Align(
           alignment: Alignment.topCenter,
           child: accountProvider.imageUrl == ""

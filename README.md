@@ -24,7 +24,26 @@ La UI presenta elementi di facile utilizzo per device mobile, come liste orizzon
 
 I campi per inserire gli input sono mirati ad aprire la keyboard dello smartphone con il tipo che l'app si aspetta (nel caso della mail il textfield apre la keyboard con i suggerimenti le mail già inserite in altri field della stessa tipologia e con i pulsanti della tastiera per velocizzare l'inserimento di un mail).
   
-  Inserire screenshot
+Splashscreen
+![splashscreen](/movies/assets/screenshots/Splashscreen.png?raw=true "Splashcreen")
+---
+Welcome page
+![Welcome page](/movies/assets/screenshots/Welcome_page.png?raw=true "Welcome page")
+---
+Signup page
+![Signup page](/movies/assets/screenshots/sign_up_page.png?raw=true "Signup page")
+---
+Homepage
+![Homepage](/movies/assets/screenshots/homepage.png?raw=true "Homepage")
+---
+Search page
+![Search page](/movies/assets/screenshots/search_page.png?raw=true "Search page")
+---
+Sidebar
+![Sidebar](/movies/assets/screenshots/sidebar.png?raw=true "Sidebar")
+---
+Details
+![Details](/movies/assets/screenshots/details.png?raw=true "Details")
 
 # Techs
 Le tecnologie utilizzate: 

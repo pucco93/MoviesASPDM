@@ -60,7 +60,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
   @override
   Widget build(BuildContext context) {
 
-    double textPadding = 100;
+    double textPadding = 105;
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       if (_isIPhoneNotch) {
         textPadding = 70;

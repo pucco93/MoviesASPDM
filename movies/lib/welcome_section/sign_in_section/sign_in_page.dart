@@ -472,6 +472,7 @@ class _SignInViewState extends State<SignInView> {
                       ),
                       keyboardType: TextInputType.visiblePassword,
                       controller: _passwordController,
+                      obscureText: true,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0)),
