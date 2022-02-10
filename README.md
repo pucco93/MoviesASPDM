@@ -25,25 +25,26 @@ La UI presenta elementi di facile utilizzo per device mobile, come liste orizzon
 I campi per inserire gli input sono mirati ad aprire la keyboard dello smartphone con il tipo che l'app si aspetta (nel caso della mail il textfield apre la keyboard con i suggerimenti le mail già inserite in altri field della stessa tipologia e con i pulsanti della tastiera per velocizzare l'inserimento di un mail).
   
 Splashscreen
-![splashscreen](/movies/assets/screenshots/Splashscreen.png?raw=true width=500 "Splashcreen")
+
+<img src="movies/assets/screenshots/Splashscreen.png" width="200" alt="Splashscreen"></img>
 ---
-Welcome page
-![Welcome page](/movies/assets/screenshots/Welcome_page.png?raw=true "Welcome page")
+Welcome page  
+<img src="movies/assets/screenshots/Welcome_page.png" width="200" alt="Welcome page"></img>
 ---
-Signup page
-![Signup page](/movies/assets/screenshots/sign_up_page.png?raw=true "Signup page")
+Signup page  
+<img src="movies/assets/screenshots/sign_up_page.png" width="200" alt="Signup page"></img>
 ---
-Homepage
-![Homepage](/movies/assets/screenshots/homepage.png?raw=true "Homepage")
+Homepage  
+<img src="movies/assets/screenshots/homepage.png" width="200" alt="Homepage"></img>
 ---
-Search page
-![Search page](/movies/assets/screenshots/search_page.png?raw=true "Search page")
+Search page  
+<img src="movies/assets/screenshots/search_page.png" width="200" alt="Search page"></img>
 ---
-Sidebar
-![Sidebar](/movies/assets/screenshots/sidebar.png?raw=true "Sidebar")
+Sidebar  
+<img src="movies/assets/screenshots/sidebar.png" width="200" alt="Sidebar"></img>
 ---
-Details
-![Details](/movies/assets/screenshots/details.png?raw=true "Details")
+Details  
+<img src="movies/assets/screenshots/details.png" width="200" alt="Details"></img>
 
 # Techs
 Le tecnologie utilizzate: 
