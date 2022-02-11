@@ -19,6 +19,8 @@ Altrimenti se ha sentito parlare di un film da un amico può decidere di cercarl
   
 Se l'utente al momento non ha la possibilità di vedere il film scelto può decidere di metterlo fra i preferiti, se loggato, e in seguito ritrovarlo alla prossima apertura dell'app.
 
+Nella scheda del dettaglio del film scorrendo possiamo trovare i suggeriti, premendo su di uno possiamo aprire quella scheda.
+
 ## Esperienza utente
 La UI presenta elementi di facile utilizzo per device mobile, come liste orizzontali e pagine a scorrimento verticale, in particolare per la UX si è pensato di creare (oltre il navbar in alto con il pulsante del menù) una bottomNavigationBar perchè più facilmente raggiungibile negli smartphone con il pollice, questa presenta i pulsanti per raggiungere le principali pagine: home, preferiti, ricerca e profilo.
 
@@ -73,3 +75,9 @@ Come mostrato nel file pubspec.yml i restanti pacchetti esterni usati sono tmdb_
 
 ## Tests
 Tutti i test sono stati effettuati su Oneplus 5T con Android 10 e su iPhone 13 con iOS 15.2.
+
+## Unintentional behaviour
+Riguardo la funzionalità dei suggeriti, questa purtroppo induce un comportamento non corretto da parte dell'app, che non permette di aprire il side panel dopo l'apertura del primo suggerito.
+Gli unici modi di poter tornare al corretto lifcycle dell'app è di tornare indietro fino ad uscire dai suggeriti, tramite il floating button o le gesture del dispositivo native.
+
+In caso di rilascio reale questo bug dovrebbe avere la priorità perchè è il più "pericoloso."

@@ -10,7 +10,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     _openProfile(ProviderHome homeProvider) {
-      homeProvider.updateCurrentPageIndex(2);
+      if (homeProvider.currentPageIndex != 2) {
+        homeProvider.updateCurrentPageIndex(2);
+      }
     }
 
     _openDrawer(ProviderHome homeProvider) {
