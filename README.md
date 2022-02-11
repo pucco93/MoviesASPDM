@@ -24,28 +24,35 @@ La UI presenta elementi di facile utilizzo per device mobile, come liste orizzon
 
 I campi per inserire gli input sono mirati ad aprire la keyboard dello smartphone con il tipo che l'app si aspetta (nel caso della mail il textfield apre la keyboard con i suggerimenti le mail già inserite in altri field della stessa tipologia e con i pulsanti della tastiera per velocizzare l'inserimento di un mail).
   
-Tutti gli screenshot sono stati effettuati sul simulatore di un IPhone 13  
+Tutti gli screenshot sono stati effettuati sul simulatore di un IPhone 13: 
 
 
 Splashscreen  
+  
 <img src="movies/assets/screenshots/Splashscreen.png" width="200" alt="Splashscreen"></img>
 ---
 Welcome page  
+  
 <img src="movies/assets/screenshots/Welcome_page.png" width="200" alt="Welcome page"></img>
 ---
 Signup page  
+  
 <img src="movies/assets/screenshots/sign_up_page.png" width="200" alt="Signup page"></img>
 ---
 Homepage  
+  
 <img src="movies/assets/screenshots/homepage.png" width="200" alt="Homepage"></img>
 ---
 Search page  
+  
 <img src="movies/assets/screenshots/search_page.png" width="200" alt="Search page"></img>
 ---
 Sidebar  
+  
 <img src="movies/assets/screenshots/sidebar.png" width="200" alt="Sidebar"></img>
 ---
 Details  
+  
 <img src="movies/assets/screenshots/details.png" width="200" alt="Details"></img>
 
 # Techs
@@ -63,3 +70,6 @@ Per poterle utilizzare occorre creare un account sul sito ed in seguito fare ric
 
 
 Come mostrato nel file pubspec.yml i restanti pacchetti esterni usati sono tmdb_api e flutter_icons, il primo per poter sfruttare al meglio le APIs di tmdb, invece di dover seguire la libreria standard di flutter (http), che mostrava problemi di configurazioni con le APIs di tmdb, il secondo invece è stato sfruttato per creare l'icona dell'app.
+
+## Tests
+Tutti i test sono stati effettuati su Oneplus 5T con Android 10 e su iPhone 13 con iOS 15.2.

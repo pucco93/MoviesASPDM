@@ -358,7 +358,7 @@ class _DetailsMoviePageState extends State<DetailsMoviePage> {
                                                       .logoPath !=
                                                   ""
                                               ? FadeInImage.assetNetwork(
-                                                  placeholder: '',
+                                                  placeholder: 'assets/images/placeholder_movie.png',
                                                   image:
                                                       '$basePathImages${_movieDetails.watchProviders[index].logoPath}')
                                               : Container()));

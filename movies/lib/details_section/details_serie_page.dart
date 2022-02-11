@@ -367,7 +367,7 @@ class _DetailsSeriePageState extends State<DetailsSeriePage> {
                                                         .logoPath !=
                                                     ""
                                                 ? FadeInImage.assetNetwork(
-                                                    placeholder: '',
+                                                    placeholder: 'assets/images/placeholder_movie.png',
                                                     image:
                                                         '$basePathImages${_serieDetails.watchProviders[index].logoPath}',
                                                   fit: BoxFit.cover)
