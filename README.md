@@ -86,7 +86,10 @@ Tutti i test sono stati effettuati su Oneplus 5T con Android 10 e su iPhone 13 c
 Sono stati effettuati test con un iPhone 6 plus (purtroppo non ho controllato la versione del sistema operativo), con risultati negativi perchè dopo il caricamente della homepage il dispositivo non sembrava riuscire a "reggere" l'app e la chiudeva dopo pochi secondi dal caricamento dei dati. Da Macbook Pro purtroppo non ho potuto effettuare test su un simulatore di un iPhone 6 plus perchè non più presente.
 
 ## Unintentional behaviour
-Riguardo la funzionalità dei suggeriti, questa purtroppo induce un comportamento non corretto da parte dell'app, che non permette di aprire il side panel dopo l'apertura del primo suggerito.
+Riguardo la funzionalità dei suggeriti, questa purtroppo induce un comportamento non corretto da parte dell'app, che non permette di aprire il side panel dopo l'apertura del primo suggerito (questo comprende anche la possibilità di aprire il profilo dall'app bar).
 Gli unici modi di poter tornare al corretto lifcycle dell'app è di tornare indietro fino ad uscire dai suggeriti, tramite il floating button o le gesture del dispositivo native.
 
 In caso di rilascio reale questo bug dovrebbe avere la priorità perchè è il più "pericoloso."
+
+Purtroppo durante i test ho provato a lanciare l'app senza connessione alla rete, nonostante l'app possa avere nel db i dati necessari per caricare una buona parte della UI, rimane l'indisponibilità delle immagini che ogni volta devono essere riprese dalla rete.
+Questo non permette all'applicazione di lavorare al meglio, perchè il widget FadeInImage.assetNetwork, rimuove il placeholder perchè la chiamata è terminata, ma non trovando il dato richiesto rilascia una piccola nota d'erre al posto dell'immagine richiesta.
